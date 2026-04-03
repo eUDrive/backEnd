@@ -37,7 +37,7 @@ namespace eUDrive.Api.Controller
 
             _users.Add(user);
 
-            return Created($"/api/users/{user.Id}", user);
+            return Created($"/api/user/{user.Id}", user);
         }
 
         [HttpPut("{id}")]
