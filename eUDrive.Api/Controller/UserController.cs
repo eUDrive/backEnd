@@ -32,6 +32,11 @@ namespace eUDrive.Api.Controller
         [HttpPost]
         public IActionResult CreateUser([FromBody] User user)
         {
+            if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Email))
+            {
+                return BadRequest(new { Message = "Username and Email are required" });
+            }
+
             user.Id = _nextId++;
             user.CreatedAt = DateTime.UtcNow;
 
