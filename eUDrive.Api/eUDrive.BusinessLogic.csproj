@@ -6,9 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\eUDrive.DataAccess\eUDrive.DataAccess.csproj" />
-    <ProjectReference Include="..\eUDrive.Domain\eUDrive.Domains.csproj" />
-  </ItemGroup>
-
 </Project>
