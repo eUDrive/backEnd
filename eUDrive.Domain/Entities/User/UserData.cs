@@ -29,7 +29,5 @@ namespace eUDrive.Domains.Entities.User
         [Required]
         [DataType(DataType.Date)]
         public DateTime CreatedAt { get; set; }
-
-
     }
 }

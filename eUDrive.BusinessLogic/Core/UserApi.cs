@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eUDrive.BusinessLogic.Interfaces
+namespace eUDrive.BusinessLogic.Core
 {
-    internal interface IUserService
+    public class UserApi
     {
     }
 }
