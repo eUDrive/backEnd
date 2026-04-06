@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eUDrive.BusinessLogic.Interfaces
+namespace eUDrive.BusinessLogic
 {
-    internal interface IProductService
+    public class SessionBL : UserApi, ISession
     {
     }
 }

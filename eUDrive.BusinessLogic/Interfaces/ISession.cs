@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eUDrive.BusinessLogic
+namespace eUDrive.BusinessLogic.Interfaces
 {
-    public class BusinessLogic
+    public interface ISession
     {
     }
 }
