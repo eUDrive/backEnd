@@ -1,10 +1,10 @@
-﻿namespace eUDrive.Api.DTOs.User
+﻿
+namespace eUDrive.Domains.Models
 {
-    public class CreateUserRequest
+    public class RegisterRequest
     {
         public string Username { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-
     }
 }

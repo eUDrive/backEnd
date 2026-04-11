@@ -1,6 +1,6 @@
-﻿using eUDrive.Api.Domain;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using eUDrive.Domains.Entities;
+using eUDrive.BusinessLogic.Interfaces;
 
 namespace eUDrive.Api.Controller
 {
@@ -8,8 +8,13 @@ namespace eUDrive.Api.Controller
     [ApiController]
     public class UserController : ControllerBase
     {
-        private static List<User> _users = new();
-        private static int _nextId = 1;
+        internal IAuthActions _auth;
+
+        public UserController(IAuthActions auth)
+        {
+            var bl = new BusinessLogic.BusinessLogic();
+            _auth = bl.GetAuthActions();
+        }
 
         [HttpGet("all")]
         public IActionResult GetAllUsers()

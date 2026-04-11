@@ -2,16 +2,13 @@
 
 namespace eUDrive.BusinessLogic.Interfaces
 {
-    public interface IUserService
+    public interface IUserRepository
     {
         Task<UserData?> GetByIdAsync(int id);
         Task<IEnumerable<UserData>> GetAllAsync();
-
         Task<UserData?> GetByUsernameAsync(string username);
-
-        Task RegisterAsync(string name, string email, string password);
-        Task UpdateAsync(int id, string name, string email, string password);
-
-        Task DeleteAsync(int id);
+        Task AddAsync(UserData user);
+        Task UpdateAsync(UserData user);
+        Task DeleteAsync(UserData user);
     }
 }

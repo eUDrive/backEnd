@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eUDrive.DataAccess", "eUDri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eUDrive.Domains", "eUDrive.Domain\eUDrive.Domains.csproj", "{F3968387-9292-C6F3-6FB1-4F8BBACF039C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eUDrive.Domain", "eUDrive.Domain", "{7585A69A-5A55-BE16-3759-6EAB95A5A22A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

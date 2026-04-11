@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using eUDrive.BusinessLogic.Interfaces;
 
 namespace eUDrive.BusinessLogic
 {
-    internal class BusinessLogic
+    public class BusinessLogic
     {
+        public IAuthActions GetAuthActions()
+        {
+            return new AuthFlow();
+        }
     }
 }
