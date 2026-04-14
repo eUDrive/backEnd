@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eUDrive.BusinessLogic.Core
+namespace eUDrive.BusinessLogic.Functions.Users
 {
-    public class UserApi
+    internal class UserFlow
     {
     }
 }

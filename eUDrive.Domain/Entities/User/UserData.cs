@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace eUDrive.Domains.Entities.User
 {
-    internal class UserData
+    public class UserData
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -19,15 +19,17 @@ namespace eUDrive.Domains.Entities.User
         public string Username { get; set; }
 
         [Required]
-        [StringLength(50, MinimumLength = 8)]
-        public string Password { get; set; }
-
-        [Required]
         [StringLength(50)]
         public string Email { get; set; }
 
         [Required]
+        [StringLength(50, MinimumLength = 8)]
+        public string PasswordHash { get; set; }
+
+        [Required]
         [DataType(DataType.Date)]
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public bool IsActive { get; set; } = true;
     }
 }
