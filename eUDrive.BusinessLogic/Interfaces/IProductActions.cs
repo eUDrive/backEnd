@@ -15,6 +15,5 @@ namespace eUDrive.BusinessLogic.Interfaces
         ResponseMsg CreateProductAction(ProductDto product);
         ResponseMsg UpdateProductAction(ProductDto product);
         ResponseMsg DeleteProductAction(int id);
-
     }
 }
