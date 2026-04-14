@@ -27,6 +27,6 @@ namespace eUDrive.Domains.Entities.Product
 
         [DataType(DataType.Date)]
         public DateTime CreatedAt { get; set; }
-        public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; }
     }
 }
