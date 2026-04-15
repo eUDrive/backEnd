@@ -66,8 +66,7 @@ namespace eUDrive.BusinessLogic.Core.User
 
         protected ResponseMsg ExecuteCreateUserAction(UserDto userDto)
         {
-            //Name should not be empty so we check it
-            if (string.IsNullOrEmpty(userDto.Username))
+            if (string.IsNullOrWhiteSpace(userDto.Username))
             {
                 return new ResponseMsg
                 {
@@ -75,6 +74,167 @@ namespace eUDrive.BusinessLogic.Core.User
                     Message = "Имя не должнл быть пустым. "
                 };
             }
+
+            if (string.IsNullOrWhiteSpace(userDto.Email) || !userDto.Email.Contains("@"))
+            {
+                return new ResponseMsg
+                {
+                    IsSuccess = false,
+                    Message = "Invalid Email format"
+                };
+            }
+
+            using (var db = new UserContext())
+            {
+                var existingUser = db.Users.FirstOrDefault(u =>u.Email.Equals(userDto.Email, StringComparison.OrdinalIgnoreCase));
+
+                if (existingUser != null)
+                {
+                    return new ResponseMsg
+                    {
+                        IsSuccess = false,
+                        Message = "User with this email already exists"
+                    };
+                }
+
+                existingUser = db.Users.FirstOrDefault(u => u.Username.Equals(userDto.Username, StringComparison.OrdinalIgnoreCase));
+
+                if (existingUser != null) 
+                {
+                    return new ResponseMsg
+                    {
+                        IsSuccess = false,
+                        Message = "This Username already exists"
+                    };
+                        
+                };
+            }
+
+            var userData = new UserData()
+            {
+                Username = userDto.Username,
+                Email = userDto.Email,
+                PasswordHash = "", //I will fix later
+                CreatedAt = DateTime.Now,
+                IsActive = true
+            };
+
+            using (var db = new UserContext())
+            {
+                db.Users.Add(userData);
+                db.SaveChanges();
+            }
+
+            return new ResponseMsg
+            {
+                IsSuccess = true,
+                Message = "User created successfully",
+            };
         }
+
+        protected ResponseMsg ExecuteUpdateUserAction(UserDto userDto)
+        {
+            using (var db = new UserContext())
+            {
+                var existingUser = db.Users.FirstOrDefault(u => u.Id == userDto.Id);
+
+                if (existingUser == null) 
+                {
+                    return new ResponseMsg
+                    {
+                        IsSuccess = false,
+                        Message = "User not found"
+                    };
+                }
+
+                existingUser.Username = userDto.Username;
+                existingUser.Email = userDto.Email;
+
+                db.SaveChanges();
+            }
+
+            return new ResponseMsg
+            {
+                IsSuccess = true,
+                Message = "User data changed successfully"
+            };
+        }
+
+        protected ResponseMsg ExecuteDeleteUserAction(int id)
+        {
+            using (var db = new UserContext())
+            {
+                var existingUser = db.Users.FirstOrDefault(u => u.Id == id);
+
+                if (existingUser == null)
+                {
+                    return new ResponseMsg
+                    {
+                        IsSuccess = false,
+                        Message = "User was not found"
+                    };
+                }
+
+                existingUser.IsActive = false; //I'm gonna deactivate it for now, maybe later I will make full delete
+
+                return new ResponseMsg
+                {
+                    IsSuccess = true,
+                    Message = "User was deactivated"
+                };
+
+            }
+        }
+
+        protected ResponseMsg ExecuteLoginAction(UserAuthDto user)
+        {
+            if (string.IsNullOrWhiteSpace(user.Email))
+            {
+                return new ResponseMsg
+                {
+                    IsSuccess = false,
+                    Message  = "Please, enter the email"
+                };
+            }
+
+            if (string.IsNullOrWhiteSpace(user.Password))
+            {
+                return new ResponseMsg
+                {
+                    IsSuccess = false,
+                    Message = "Please, enter the password"
+                };
+            }
+
+            using (var db = new UserContext())
+            {
+                var existingUser = db.Users.FirstOrDefault(u => u.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase));
+
+                if (existingUser == null)
+                {
+                    return new ResponseMsg
+                    {
+                        IsSuccess = false,
+                        Message = "Incorrect data, please try again!"
+                    };
+                }
+
+                if (!VerifyPassword(user.Password, existingUser.PasswordHash))
+                {
+                    return new ResponseMsg
+                    {
+                        IsSuccess = false,
+                        Message = "Incorrect data, please try again!"
+                    };
+                }
+            }
+
+            return new ResponseMsg
+            {
+                IsSuccess = true,
+                Message = "Login Successfull"
+            };
+        }
+        
     }
 }
