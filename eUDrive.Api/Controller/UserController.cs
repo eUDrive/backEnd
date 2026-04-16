@@ -1,5 +1,5 @@
-﻿using eUDrive.Api.Domain;
-using Microsoft.AspNetCore.Http;
+﻿using eUDrive.BusinessLogic.Interfaces;
+using eUDrive.Domains.Models.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eUDrive.Api.Controller
@@ -8,70 +8,67 @@ namespace eUDrive.Api.Controller
     [ApiController]
     public class UserController : ControllerBase
     {
-        private static List<User> _users = new();
-        private static int _nextId = 1;
+        private IUserActions _userActions;
+
+        public UserController()
+        {
+            var bl = new BusinessLogic.BusinessLogic();
+            _userActions = bl.GetUserActions();
+        }
 
         [HttpGet("all")]
         public IActionResult GetAllUsers()
         {
-            return Ok(_users);
+            var users = _userActions.GetAllUsersAction();
+            return Ok(users);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetUserById(int id)
         {
-            var user = _users.FirstOrDefault(u => u.Id == id);
-            if (user == null)
-            {
-                return NotFound(new { Message = $"User with ID {id} not found" });
-            }
+            var user = _userActions.GetUserByIdAction(id);
 
             return Ok(user);
         }
 
         [HttpPost]
-        public IActionResult CreateUser([FromBody] User user)
+        public IActionResult CreateUser([FromBody] UserDto user)
         {
-            if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Email))
+            var createdUser = _userActions.CreateUserAction(user);
+
+            if (!createdUser.IsSuccess)
             {
-                return BadRequest(new { Message = "Username and Email are required" });
+                return BadRequest(createdUser);
             }
 
-            user.Id = _nextId++;
-            user.CreatedAt = DateTime.UtcNow;
-
-            _users.Add(user);
-
-            return Created($"/api/user/{user.Id}", user);
+            return Ok(createdUser);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] User updatedUser)
+        public IActionResult UpdateUser(int id, [FromBody] UserDto user)
         {
-            var existingUser = _users.FirstOrDefault(u => u.Id == id);
-
-            if (existingUser == null)
+            user.Id = id;
+            var updatedUser = _userActions.UpdateUserAction(user);
+            
+            if (!updatedUser.IsSuccess)
             {
-                return NotFound(new { Message = $"User with ID {id} not found" });
+                return BadRequest(updatedUser);
             }
 
-            existingUser.Username = updatedUser.Username;
-            existingUser.Email = updatedUser.Email;
-
-            return Ok(existingUser);
+            return Ok(updatedUser);
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteUser(int id)
         {
-            var user = _users.FirstOrDefault(u => u.Id == id);
-            if (user == null)
+            var user = _userActions.DeleteUserAction(id);
+
+            if (!user.IsSuccess)
             {
-                return NotFound(new { Message = $"User with ID {id} not found" });
+                return BadRequest(user);
             }
 
-            _users.Remove(user);
-            return NoContent();
+            return Ok(user);
         }
     }
 }

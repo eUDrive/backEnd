@@ -3,7 +3,7 @@ using eUDrive.Domains.Models.Base;
 
 namespace eUDrive.BusinessLogic.Interfaces
 {
-    internal interface IUserActions
+    public interface IUserActions
     {
         List<UserDto> GetAllUsersAction();
         UserDto GetUserByIdAction(int id);
