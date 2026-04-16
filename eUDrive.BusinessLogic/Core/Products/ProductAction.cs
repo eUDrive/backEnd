@@ -71,7 +71,7 @@ namespace eUDrive.BusinessLogic.Core.Products
 
             using (var db = new ProductContext())
             {
-                var existingProduct = db.Products.FirstOrDefault(p => p.Name.Equals(product.Name, StringComparison.OrdinalIgnoreCase) && p.IsActive);
+                var existingProduct = db.Products.FirstOrDefault(p => p.Name.ToLower() == product.Name.ToLower() && p.IsActive);
 
                 if (existingProduct != null)
                 {

@@ -1,4 +1,4 @@
-﻿using eUDrive.Api.Domain;
+﻿using eUDrive.Domains.Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +8,7 @@ namespace eUDrive.Api.Controller
     [ApiController]
     public class UserController : ControllerBase
     {
-        private static List<User> _users = new();
+        private static List<UserDto> _users = new();
         private static int _nextId = 1;
 
         [HttpGet("all")]
@@ -30,7 +30,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpPost]
-        public IActionResult CreateUser([FromBody] User user)
+        public IActionResult CreateUser([FromBody] UserDto user)
         {
             if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Email))
             {
@@ -46,7 +46,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] User updatedUser)
+        public IActionResult UpdateUser(int id, [FromBody] UserDto updatedUser)
         {
             var existingUser = _users.FirstOrDefault(u => u.Id == id);
 
