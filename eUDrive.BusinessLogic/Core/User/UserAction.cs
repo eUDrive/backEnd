@@ -44,7 +44,7 @@ namespace eUDrive.BusinessLogic.Core.User
             }
         }
 
-        protected UserDto ExecuteGetUserByIdAction(int id) 
+        protected UserDto? ExecuteGetUserByIdAction(int id) 
         {
             using (var db = new UserContext())
             {
@@ -208,7 +208,8 @@ namespace eUDrive.BusinessLogic.Core.User
 
             using (var db = new UserContext())
             {
-                var existingUser = db.Users.FirstOrDefault(u => u.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase));
+                var email = user.Email.ToLower();
+                var existingUser = db.Users.FirstOrDefault(u => u.Email.ToLower() == email);
 
                 if (existingUser == null)
                 {

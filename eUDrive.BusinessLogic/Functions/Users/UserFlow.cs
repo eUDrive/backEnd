@@ -12,7 +12,7 @@ namespace eUDrive.BusinessLogic.Functions.Users
             return ExecuteGetAllUsersAction();
         }
 
-        public UserDto GetUserByIdAction(int id)
+        public UserDto? GetUserByIdAction(int id)
         {
             return ExecuteGetUserByIdAction(id);
         }
