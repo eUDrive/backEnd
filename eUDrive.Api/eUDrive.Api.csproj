@@ -15,4 +15,8 @@
     <ProjectReference Include="..\eUDrive.Domain\eUDrive.Domains.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Domain\" />
+  </ItemGroup>
+
 </Project>
