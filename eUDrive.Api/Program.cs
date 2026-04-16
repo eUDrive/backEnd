@@ -1,7 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 
-eUDrive.DataAccess.DbSession.ConnectionStrings =
-    builder.Configuration.GetConnectionString("DefaultConnection");
+eUDrive.DataAccess.DbSession.ConnectionStrings = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
