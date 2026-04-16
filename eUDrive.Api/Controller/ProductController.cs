@@ -1,5 +1,4 @@
-﻿using eUDrive.Api.Domain;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eUDrive.Api.Controller

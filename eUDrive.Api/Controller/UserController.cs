@@ -28,6 +28,11 @@ namespace eUDrive.Api.Controller
         {
             var user = _userActions.GetUserByIdAction(id);
 
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
             return Ok(user);
         }
 
