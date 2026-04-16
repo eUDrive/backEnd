@@ -30,7 +30,7 @@ namespace eUDrive.BusinessLogic.Core.Products
             }
         }
 
-        protected ProductDto GetProductByIdAction(int id) 
+        public ProductDto GetProductByIdAction(int id) 
         {
             using (var db = new ProductContext())
             {

@@ -1,4 +1,5 @@
 ﻿using eUDrive.BusinessLogic.Core;
+using eUDrive.BusinessLogic.Functions.Products;
 using eUDrive.BusinessLogic.Interfaces;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
@@ -9,16 +10,11 @@ using System.Threading.Tasks;
 
 namespace eUDrive.BusinessLogic
 {
-    public class SessionBL : UserApi, ISession
-    {
-
-    }
-
     public class BusinessLogic
     {
-        public ISession GetSessionBL()
+        public IProductActions GetProductActions()
         {
-            return new SessionBL();
+            return new ProductFlow();
         }
     }
 }
