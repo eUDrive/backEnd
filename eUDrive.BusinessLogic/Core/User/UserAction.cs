@@ -64,14 +64,14 @@ namespace eUDrive.BusinessLogic.Core.User
             }
         }
 
-        protected ResponseMsg ExecuteCreateUserAction(UserDto userDto)
+        protected ResponseMsg ExecuteCreateUserAction(UserRegisterDto userDto)
         {
             if (string.IsNullOrWhiteSpace(userDto.Username))
             {
                 return new ResponseMsg
                 {
                     IsSuccess = false,
-                    Message = "Имя не должнл быть пустым. "
+                    Message = "Username shouldn't be empty. "
                 };
             }
 
@@ -84,11 +84,23 @@ namespace eUDrive.BusinessLogic.Core.User
                 };
             }
 
+            if (string.IsNullOrWhiteSpace(userDto.Password))
+            {
+                return new ResponseMsg
+                {
+                    IsSuccess = false,
+                    Message = "Password should be at least 8 characters"
+                };
+            }
+
+            var email = userDto.Email.ToLower();
+            var username = userDto.Username.ToLower();
+
             using (var db = new UserContext())
             {
-                var existingUser = db.Users.FirstOrDefault(u =>u.Email.Equals(userDto.Email, StringComparison.OrdinalIgnoreCase));
+                var existingUserByEmail = db.Users.FirstOrDefault(u => u.Email.ToLower() == email);
 
-                if (existingUser != null)
+                if (existingUserByEmail != null)
                 {
                     return new ResponseMsg
                     {
@@ -97,9 +109,9 @@ namespace eUDrive.BusinessLogic.Core.User
                     };
                 }
 
-                existingUser = db.Users.FirstOrDefault(u => u.Username.Equals(userDto.Username, StringComparison.OrdinalIgnoreCase));
+                var existingUserByUsername = db.Users.FirstOrDefault(u => u.Username.ToLower() == username);
 
-                if (existingUser != null) 
+                if (existingUserByUsername != null) 
                 {
                     return new ResponseMsg
                     {
@@ -114,7 +126,7 @@ namespace eUDrive.BusinessLogic.Core.User
             {
                 Username = userDto.Username,
                 Email = userDto.Email,
-                PasswordHash = "", //I will fix later
+                PasswordHash = HashPassword(userDto.Password),
                 CreatedAt = DateTime.Now,
                 IsActive = true
             };
@@ -176,6 +188,7 @@ namespace eUDrive.BusinessLogic.Core.User
                 }
 
                 existingUser.IsActive = false; //I'm gonna deactivate it for now, maybe later I will make full delete
+                db.SaveChanges();
 
                 return new ResponseMsg
                 {

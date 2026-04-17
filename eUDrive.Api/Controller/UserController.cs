@@ -37,7 +37,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpPost]
-        public IActionResult CreateUser([FromBody] UserDto user)
+        public IActionResult CreateUser([FromBody] UserRegisterDto user)
         {
             var createdUser = _userActions.CreateUserAction(user);
 

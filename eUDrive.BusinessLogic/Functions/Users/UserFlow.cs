@@ -17,7 +17,7 @@ namespace eUDrive.BusinessLogic.Functions.Users
             return ExecuteGetUserByIdAction(id);
         }
 
-        public ResponseMsg CreateUserAction(UserDto user)
+        public ResponseMsg CreateUserAction(UserRegisterDto user)
         {
             return ExecuteCreateUserAction(user);
         }

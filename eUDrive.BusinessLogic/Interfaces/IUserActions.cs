@@ -8,7 +8,7 @@ namespace eUDrive.BusinessLogic.Interfaces
         List<UserDto> GetAllUsersAction();
         UserDto? GetUserByIdAction(int id);
 
-        ResponseMsg CreateUserAction(UserDto user);
+        ResponseMsg CreateUserAction(UserRegisterDto user);
         ResponseMsg UpdateUserAction(UserDto user);
 
         ResponseMsg DeleteUserAction(int id);

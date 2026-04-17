@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+eUDrive.Api/appsettings.json ##To prevent bd changes
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
