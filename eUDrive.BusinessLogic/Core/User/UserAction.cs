@@ -84,7 +84,7 @@ namespace eUDrive.BusinessLogic.Core.User
                 };
             }
 
-            if (string.IsNullOrWhiteSpace(userDto.Password))
+            if (string.IsNullOrWhiteSpace(userDto.Password) || userDto.Password.Length < 8)
             {
                 return new ResponseMsg
                 {
@@ -108,18 +108,6 @@ namespace eUDrive.BusinessLogic.Core.User
                         Message = "User with this email already exists"
                     };
                 }
-
-                var existingUserByUsername = db.Users.FirstOrDefault(u => u.Username.ToLower() == username);
-
-                if (existingUserByUsername != null) 
-                {
-                    return new ResponseMsg
-                    {
-                        IsSuccess = false,
-                        Message = "This Username already exists"
-                    };
-                        
-                };
             }
 
             var userData = new UserData()
@@ -156,6 +144,38 @@ namespace eUDrive.BusinessLogic.Core.User
                     {
                         IsSuccess = false,
                         Message = "User not found"
+                    };
+                }
+
+                if (string.IsNullOrWhiteSpace(userDto.Username))
+                {
+                    return new ResponseMsg
+                    {
+                        IsSuccess = false,
+                        Message = "Username shouldn't be empty. "
+                    };
+                }
+
+                if (string.IsNullOrWhiteSpace(userDto.Email) || !userDto.Email.Contains("@"))
+                {
+                    return new ResponseMsg
+                    {
+                        IsSuccess = false,
+                        Message = "Invalid Email format"
+                    };
+                }
+
+                var email = userDto.Email.ToLower();
+                var username = userDto.Username.ToLower();
+
+                var existingUserByEmail = db.Users.FirstOrDefault(u => u.Id != userDto.Id && u.Email.ToLower() == email);
+
+                if (existingUserByEmail != null)
+                {
+                    return new ResponseMsg
+                    {
+                        IsSuccess = false,
+                        Message = "This email already exists"
                     };
                 }
 
