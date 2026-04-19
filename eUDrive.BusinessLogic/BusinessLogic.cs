@@ -1,6 +1,7 @@
 ﻿using eUDrive.BusinessLogic.Functions.Users;
 using eUDrive.BusinessLogic.Interfaces;
 using eUDrive.BusinessLogic.Functions.Products;
+using eUDrive.BusinessLogic.Functions.Sessions;
 
 namespace eUDrive.BusinessLogic
 {
@@ -14,6 +15,11 @@ namespace eUDrive.BusinessLogic
         public IUserActions GetUserActions()
         {
             return new UserFlow();
+        }
+
+        public ISessionActions GetSessionActions()
+        {
+            return new SessionFlow();
         }
     }
 }
