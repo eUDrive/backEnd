@@ -2,9 +2,11 @@
 using eUDrive.BusinessLogic.Interfaces;
 using eUDrive.Domains.Models.User;
 using eUDrive.DataAccess.Context;
+using Microsoft.AspNetCore.Authorization;
 
 namespace eUDrive.Api.Controller
 {
+    [AllowAnonymous]
     [Route("/api/auth")]
     [ApiController]
     public class AuthController : ControllerBase

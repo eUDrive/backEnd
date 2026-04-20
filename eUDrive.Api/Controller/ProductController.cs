@@ -2,6 +2,7 @@
 using eUDrive.Domains.Models.Product;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using eUDrive.Api.Filters;
 
 namespace eUDrive.Api.Controller
 {
@@ -34,6 +35,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpPost]
+        [AdminOnly]
         public IActionResult CreateProduct([FromBody] ProductDto product)
         {
             var result = _productActions.CreateProductAction(product);
@@ -44,6 +46,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpPut("{id}")]
+        [AdminOnly]
         public IActionResult UpdateProduct(int id, [FromBody] ProductDto product)
         {
             product.Id = id;
@@ -55,6 +58,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpDelete("{id}")]
+        [AdminOnly]
         public IActionResult DeleteProduct(int id)
         {
             var result = _productActions.DeleteProductAction(id);

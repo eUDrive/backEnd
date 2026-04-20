@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using eUDrive.Domains.Enums;
+
 
 namespace eUDrive.Domains.Entities.User
 {
@@ -31,5 +28,7 @@ namespace eUDrive.Domains.Entities.User
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public bool IsActive { get; set; } = true;
+
+        public URole Role { get; set; } = URole.User;
     }
 }
