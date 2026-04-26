@@ -1,71 +1,58 @@
 ﻿using eUDrive.DataAccess.Context;
-using eUDrive.Domains.Entities.Product;
+using eUDrive.Domains.Entities.Order;
 using eUDrive.Domains.Models.Base;
-using eUDrive.Domains.Models.Product;
+using eUDrive.Domains.Models.Order;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eUDrive.BusinessLogic.Core.Products
+namespace eUDrive.BusinessLogic.Core.Order
 {
-    public class ProductAction
+    public class OrderAction
     {
-        protected List<ProductDto> ExecuteGetAllProductsAction()
+        protected List<OrderDto> ExecuteGetAllOrdersAction()
         {
-            using (var db = new ProductContext())
+            using (var db = new OrderContext())
             {
-                return db.Products
-                    .Where(p => p.IsActive)
-                    .Select(p => new ProductDto
+                return db.Orders
+                    .Select(o => new OrderDto
                     {
-                        Id = p.Id,
-                        Name = p.Name,
-                        Description = p.Description,
-                        Price = p.Price,
-                        Stock = p.Stock,
+                        Id = o.Id,
+                        UserId = o.UserId,
+                        Name = o.Name,
+                        CreatedAt = o.CreatedAt,
                     })
                     .ToList();
             }
         }
 
-        protected ProductDto GetProductByIdAction(int id) 
+        protected OrderDto GetOrderByIdAction(int id)
         {
-            using (var db = new ProductContext())
+            using (var db = new OrderContext())
             {
-                var product = db.Products.FirstOrDefault(p => p.Id == id && p.IsActive);
+                var order = db.Orders.FirstOrDefault(p => p.Id == id);
 
-                if (product == null) return null;
+                if (order == null) return null;
 
-                return new ProductDto
+                return new OrderDto
                 {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Description = product.Description,
-                    Price = product.Price,
-                    Stock = product.Stock,
+                    Id = order.Id,
+                    Name = order.Name,
+                    CreatedAt = order.CreatedAt,
                 };
             }
         }
 
-        protected ResponseMsg ExecuteCreateProductAction(ProductDto product)
+        protected ResponseMsg ExecuteCreateOrderAction(OrderDto order)
         {
-            if (string.IsNullOrWhiteSpace(product.Name))
+            if (string.IsNullOrWhiteSpace(order.Name))
             {
                 return new ResponseMsg
                 {
                     IsSuccess = false,
-                    Message = "Product name can't be empty"
-                };
-            }
-
-            if (product.Price <= 0)
-            {
-                return new ResponseMsg
-                {
-                    IsSuccess = false,
-                    Message = "Product price must be greater than 0"
+                    Message = "Order name can't be empty"
                 };
             }
 
