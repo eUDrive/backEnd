@@ -21,6 +21,7 @@ namespace eUDrive.BusinessLogic.Core.Order
                     {
                         Id = o.Id,
                         UserId = o.UserId,
+                        Type = o.Type,
                         Name = o.Name,
                         CreatedAt = o.CreatedAt,
                     })
@@ -28,123 +29,169 @@ namespace eUDrive.BusinessLogic.Core.Order
             }
         }
 
-        protected OrderDto GetOrderByIdAction(int id)
+        protected OrderDto ExecuteGetOrderByIdAction(int id)
         {
             using (var db = new OrderContext())
             {
-                var order = db.Orders.FirstOrDefault(p => p.Id == id);
+                var order = db.Orders.FirstOrDefault(o => o.Id == id);
 
                 if (order == null) return null;
 
                 return new OrderDto
                 {
                     Id = order.Id,
+                    UserId = order.UserId,
+                    Type = order.Type,
                     Name = order.Name,
                     CreatedAt = order.CreatedAt,
                 };
             }
         }
 
+        protected List<OrderDto> ExecuteGetOrdersByUserIdAction(int userId)
+        {
+            using (var db = new OrderContext())
+            {
+                return db.Orders
+                    .Where(o => o.UserId == userId && o.IsActive == true)
+                    .Select(o => new OrderDto
+                    {
+                        Id = o.Id,
+                        UserId = o.UserId,
+                        Type = o.Type,
+                        Name = o.Name,
+                        CreatedAt = o.CreatedAt,
+                    })
+                    .ToList();
+            }
+        }
+
         protected ResponseMsg ExecuteCreateOrderAction(OrderDto order)
         {
-            if (string.IsNullOrWhiteSpace(order.Name))
+            if (order == null)
             {
                 return new ResponseMsg
                 {
                     IsSuccess = false,
-                    Message = "Order name can't be empty"
+                    Message = "Order can't be empty"
                 };
             }
 
-            using (var db = new ProductContext())
+            if (order.UserId <= 0)
             {
-                var existingProduct = db.Products.FirstOrDefault(p => p.Name.ToLower() == product.Name.ToLower() && p.IsActive);
+                return new ResponseMsg 
+                { 
+                    IsSuccess = false, 
+                    Message = "User ID is required" 
+                };
+            }  
 
-                if (existingProduct != null)
-                {
-                    return new ResponseMsg
-                    {
-                        IsSuccess = false,
-                        Message = "Product with this name already exists"
-                    };
-                }
+            if (string.IsNullOrWhiteSpace(order.Name))
+            {
+                return new ResponseMsg 
+                { 
+                    IsSuccess = false, 
+                    Message = "Order name is required" 
+                };
             }
 
-            var productData = new ProductData
+            using (var db = new OrderContext())
             {
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-                Stock = product.Stock,
-                CreatedAt = DateTime.Now,
-                IsActive = true
-            };
-
-            using (var db = new ProductContext())
-            {
-                db.Products.Add(productData);
-                db.SaveChanges();
-            }
-
-            return new ResponseMsg
-            {
-                IsSuccess = true,
-                Message = "Product created successfully"
-            };
-        }
-
-        protected ResponseMsg ExecuteUpdateProductAction(ProductDto product)
-        {
-            using (var db = new ProductContext())
-            {
-                var existingProduct = db.Products.FirstOrDefault(p => p.Id == product.Id);
-
-                if (existingProduct == null)
+                var orderData = new OrderData
                 {
-                    return new ResponseMsg
-                    {
-                        IsSuccess = false,
-                        Message = "Product not found"
-                    };
-                }
+                    UserId = order.UserId,
+                    Type = order.Type,
+                    Name = order.Name,
+                    CreatedAt = order.CreatedAt,
+                    IsActive = true,
+                };
 
-                if (!string.IsNullOrWhiteSpace(product.Name)) existingProduct.Name = product.Name;
-                if (product.Price > 0) existingProduct.Price = product.Price;
-                if (!string.IsNullOrWhiteSpace(product.Description)) existingProduct.Description = product.Description;
-                if (product.Stock >= 0) existingProduct.Stock = product.Stock;
-
-                db.SaveChanges();
-            }
-
-            return new ResponseMsg
-            {
-                IsSuccess = true,
-                Message = "Product updated successfully"
-            };
-        }
-
-        protected ResponseMsg ExecuteDeleteProductAction(int id)
-        {
-            using (var db = new ProductContext())
-            {
-                var product = db.Products.FirstOrDefault(p => p.Id == id);
-
-                if (product == null)
-                {
-                    return new ResponseMsg
-                    {
-                        IsSuccess = false,
-                        Message = "Product not found"
-                    };
-                }
-
-                product.IsActive = false;
+                db.Orders.Add(orderData);
                 db.SaveChanges();
 
                 return new ResponseMsg
                 {
                     IsSuccess = true,
-                    Message = "Product deleted successfully"
+                    Message = "Order created successfully"
+                };
+            }
+        }
+
+        protected ResponseMsg ExecuteUpdateOrderAction(OrderDto order)
+        {
+            if (order == null)
+            {
+                return new ResponseMsg
+                {
+                    IsSuccess = false,
+                    Message = "Order can't be empty"
+                };
+            }
+
+            if (order.UserId <= 0)
+            {
+                return new ResponseMsg
+                {
+                    IsSuccess = false,
+                    Message = "User ID is required"
+                };
+            }
+
+            if (string.IsNullOrWhiteSpace(order.Name))
+            {
+                return new ResponseMsg
+                {
+                    IsSuccess = false,
+                    Message = "Order name is required"
+                };
+            }
+
+            using (var db = new OrderContext())
+            {
+                var existingOrder = db.Orders.FirstOrDefault(o => o.Id == order.Id);
+                if (existingOrder == null)
+                {
+                    return new ResponseMsg
+                    {
+                        IsSuccess = false,
+                        Message = "Order not found",
+                    };
+                }
+
+                existingOrder.Name = order.Name;
+                existingOrder.Type = order.Type;
+                db.SaveChanges();
+
+                return new ResponseMsg
+                {
+                    IsSuccess = true,
+                    Message = "Order updated with success",
+                };
+            }
+        }
+
+        protected ResponseMsg ExecuteDeleteOrderAction(int id)
+        {
+            using (var db = new OrderContext())
+            {
+                var order = db.Orders.FirstOrDefault(o => o.Id == id);
+
+                if (order == null)
+                {
+                    return new ResponseMsg
+                    {
+                        IsSuccess = false,
+                        Message = "Order not found"
+                    };
+                }
+
+                order.IsActive = false;
+                db.SaveChanges();
+
+                return new ResponseMsg
+                {
+                    IsSuccess = true,
+                    Message = "Order deleted successfully"
                 };
             }
         }

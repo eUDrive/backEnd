@@ -1,4 +1,4 @@
-﻿using eUDrive.BusinessLogic.Core.Products;
+﻿using eUDrive.BusinessLogic.Core.Order;
 using eUDrive.BusinessLogic.Interfaces;
 using eUDrive.Domains.Models.Base;
 using eUDrive.Domains.Models.Order;
@@ -17,9 +17,13 @@ namespace eUDrive.BusinessLogic.Functions.Orders
             return ExecuteGetAllOrdersAction();
         }
 
-        public new OrderDto GetOrderByIdAction(int id)
+        public OrderDto GetOrderByIdAction(int id)
         {
-            return base.GetOrderByIdAction(id);
+            return ExecuteGetOrderByIdAction(id);
+        }
+        public List<OrderDto> GetOrdersByUserIdAction(int userId)
+        {
+            return ExecuteGetOrdersByUserIdAction(userId);
         }
 
         public ResponseMsg CreateOrderAction(OrderDto order)
@@ -32,7 +36,7 @@ namespace eUDrive.BusinessLogic.Functions.Orders
             return ExecuteUpdateOrderAction(order);
         }
 
-        public ResponseMsg DeleteOrdertAction(int id)
+        public ResponseMsg DeleteOrderAction(int id)
         {
             return ExecuteDeleteOrderAction(id);
         }
