@@ -132,11 +132,11 @@ namespace eUDrive.BusinessLogic.Core.User
             };
         }
 
-        protected ResponseMsg ExecuteUpdateUserAction(UserDto userDto)
+        protected ResponseMsg ExecuteUpdateUserAction(UserUpdateDto userUpdateDto)
         {
             using (var db = new UserContext())
             {
-                var existingUser = db.Users.FirstOrDefault(u => u.Id == userDto.Id);
+                var existingUser = db.Users.FirstOrDefault(u => u.Id == userUpdateDto.Id);
 
                 if (existingUser == null) 
                 {
@@ -147,7 +147,7 @@ namespace eUDrive.BusinessLogic.Core.User
                     };
                 }
 
-                if (string.IsNullOrWhiteSpace(userDto.Username))
+                if (string.IsNullOrWhiteSpace(userUpdateDto.Username))
                 {
                     return new ResponseMsg
                     {
@@ -156,7 +156,7 @@ namespace eUDrive.BusinessLogic.Core.User
                     };
                 }
 
-                if (string.IsNullOrWhiteSpace(userDto.Email) || !userDto.Email.Contains("@"))
+                if (string.IsNullOrWhiteSpace(userUpdateDto.Email) || !userUpdateDto.Email.Contains("@"))
                 {
                     return new ResponseMsg
                     {
@@ -165,10 +165,9 @@ namespace eUDrive.BusinessLogic.Core.User
                     };
                 }
 
-                var email = userDto.Email.ToLower();
-                var username = userDto.Username.ToLower();
+                var email = userUpdateDto.Email.ToLower();
 
-                var existingUserByEmail = db.Users.FirstOrDefault(u => u.Id != userDto.Id && u.Email.ToLower() == email);
+                var existingUserByEmail = db.Users.FirstOrDefault(u => u.Id != userUpdateDto.Id && u.Email.ToLower() == email);
 
                 if (existingUserByEmail != null)
                 {
@@ -179,8 +178,9 @@ namespace eUDrive.BusinessLogic.Core.User
                     };
                 }
 
-                existingUser.Username = userDto.Username;
-                existingUser.Email = userDto.Email;
+                existingUser.Username = userUpdateDto.Username;
+                existingUser.Email = userUpdateDto.Email;
+                existingUser.IsActive = userUpdateDto.IsActive;
 
                 db.SaveChanges();
             }
@@ -190,6 +190,33 @@ namespace eUDrive.BusinessLogic.Core.User
                 IsSuccess = true,
                 Message = "User data changed successfully"
             };
+        }
+
+        protected ResponseMsg ExecuteActivateUserAction(UserActivateDto user)
+        {
+            using (var db = new UserContext())
+            {
+                var existingUser = db.Users.FirstOrDefault(u => u.Id == user.Id);
+
+                if (existingUser == null )
+                {
+                    return new ResponseMsg
+                    {
+                        IsSuccess = false,
+                        Message = "This user doesn't exist"
+                    };
+                }
+
+                existingUser.IsActive = user.IsActive;
+
+                db.SaveChanges();
+
+                return new ResponseMsg
+                {
+                    IsSuccess = true,
+                    Message = "Activation has been completed"
+                };
+            }
         }
 
         protected ResponseMsg ExecuteDeleteUserAction(int id)

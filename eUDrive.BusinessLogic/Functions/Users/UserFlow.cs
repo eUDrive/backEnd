@@ -22,9 +22,14 @@ namespace eUDrive.BusinessLogic.Functions.Users
             return ExecuteCreateUserAction(user);
         }
 
-        public ResponseMsg UpdateUserAction(UserDto user)
+        public ResponseMsg UpdateUserAction(UserUpdateDto user)
         {
             return ExecuteUpdateUserAction(user);
+        }
+
+        public ResponseMsg ActivateUserAction(UserActivateDto user)
+        {
+            return ExecuteActivateUserAction(user);
         }
 
         public ResponseMsg DeleteUserAction(int id)

@@ -50,7 +50,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] UserDto user)
+        public IActionResult UpdateUser(int id, [FromBody] UserUpdateDto user)
         {
             user.Id = id;
             var updatedUser = _userActions.UpdateUserAction(user);
@@ -61,6 +61,20 @@ namespace eUDrive.Api.Controller
             }
 
             return Ok(updatedUser);
+        }
+
+        [HttpPut("activate/{id}")]
+        public IActionResult ActivateUser(int id, [FromBody] UserActivateDto user)
+        {
+            user.Id = id;
+            var activateUser = _userActions.ActivateUserAction(user);
+
+            if (!activateUser.IsSuccess)
+            {
+                return BadRequest(activateUser);
+            }
+
+            return Ok(activateUser);
         }
 
         [HttpDelete("{id}")]
