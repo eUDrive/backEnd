@@ -17,9 +17,9 @@ namespace eUDrive.BusinessLogic.Functions.Products
             return ExecuteGetAllProductsAction();
         }
 
-        public new ProductDto GetProductByIdAction(int id)
+        public ProductDto GetProductByIdAction(int id)
         {
-            return base.GetProductByIdAction(id);
+            return ExecuteGetProductByIdAction(id);
         }
 
         public ResponseMsg CreateProductAction(ProductDto product)

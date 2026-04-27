@@ -1,4 +1,5 @@
-﻿using System;
+﻿using eUDrive.Domains.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +10,9 @@ namespace eUDrive.Domains.Models.Order
     public class OrderDto
     {
         public int Id { get; set; }
-        public string Name { get; set; }
         public int UserId { get; set; }
+        public OrderTypes Type { get; set; }
+        public string Name { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

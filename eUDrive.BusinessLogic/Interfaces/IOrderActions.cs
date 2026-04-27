@@ -12,6 +12,7 @@ namespace eUDrive.BusinessLogic.Interfaces
     {
         List<OrderDto> GetAllOrdersAction();
         OrderDto GetOrderByIdAction(int id);
+        List<OrderDto> GetOrdersByUserIdAction(int userId);
         ResponseMsg CreateOrderAction(OrderDto product);
         ResponseMsg UpdateOrderAction(OrderDto product);
         ResponseMsg DeleteOrderAction(int id);

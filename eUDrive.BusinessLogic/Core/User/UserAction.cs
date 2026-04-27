@@ -116,7 +116,7 @@ namespace eUDrive.BusinessLogic.Core.User
                 Email = userDto.Email,
                 PasswordHash = HashPassword(userDto.Password),
                 CreatedAt = DateTime.Now,
-                IsActive = true
+                IsActive = true,
             };
 
             using (var db = new UserContext())

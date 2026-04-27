@@ -11,12 +11,23 @@ namespace eUDrive.Domains.Entities.Order
 {
     public class OrderData
     {
-        [Required]
+        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+
+        [Required]
         public int UserId { get; set; }
+
+        [Required]
         public OrderTypes Type { get; set; }
+
+        [Required]
+        [StringLength(100)]
         public string Name { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
         public DateTime CreatedAt { get; set; }
+        public bool IsActive { get; set; }
     }
 }
