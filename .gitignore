@@ -9,7 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
-eUDrive.Api/appsettings.json ##To prevent bd changes
+eUDrive.Api/appsetings.json ##To prevent bd changes
 *.sql
 adminData.txt
 

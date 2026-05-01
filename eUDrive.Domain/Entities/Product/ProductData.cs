@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using eUDrive.Domains.Enums;
+
 
 namespace eUDrive.Domains.Entities.Product
 {
@@ -18,15 +15,18 @@ namespace eUDrive.Domains.Entities.Product
         [StringLength(50)]
         public string Name { get; set; }
 
-        [StringLength(200)]
-        public string Description { get; set; }
+        public ProductDescriptionData? Description { get; set; }
 
         [Required]
         public decimal Price { get; set; }
         public int Stock {  get; set; }
 
+        public ProductCategory Category { get; set; }
+
+        public List<ProductImgData> Images { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime CreatedAt { get; set; }
-        public bool IsActive { get; set; }
+        public ProductStatus IsActive { get; set; }
     }
 }
