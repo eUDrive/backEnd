@@ -9,8 +9,8 @@ namespace eUDrive.Domains.Entities.Product
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public string url { get; set; }
+        public string Url { get; set; }
 
-        public int productId { get; set; }
+        public int ProductId { get; set; }
     }
 }

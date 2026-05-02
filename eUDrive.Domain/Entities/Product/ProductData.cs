@@ -23,10 +23,8 @@ namespace eUDrive.Domains.Entities.Product
 
         public ProductCategory Category { get; set; }
 
-        public List<ProductImgData> Images { get; set; }
+        public List<ProductImgData> Images { get; set; } = new();
 
-        [DataType(DataType.Date)]
-        public DateTime CreatedAt { get; set; }
-        public ProductStatus IsActive { get; set; }
+        public ProductStatus Status { get; set; } = ProductStatus.Active;
     }
 }

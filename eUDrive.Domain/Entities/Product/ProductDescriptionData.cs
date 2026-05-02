@@ -11,8 +11,8 @@ namespace eUDrive.Domains.Entities.Product
 
         [Required]
         [StringLength(200)]
-        public string? Desription { get; set; }
+        public string? Description { get; set; }
 
-        public DescriptionAdvanced DescriptionAdvanced { get; set; }
+        public DescriptionAdvanced? DescriptionAdvanced { get; set; }
     }
 }

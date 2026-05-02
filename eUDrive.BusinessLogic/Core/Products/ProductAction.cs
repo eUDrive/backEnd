@@ -2,11 +2,8 @@
 using eUDrive.Domains.Entities.Product;
 using eUDrive.Domains.Models.Base;
 using eUDrive.Domains.Models.Product;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using eUDrive.Domains.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace eUDrive.BusinessLogic.Core.Products
 {
@@ -17,12 +14,16 @@ namespace eUDrive.BusinessLogic.Core.Products
             using (var db = new ProductContext())
             {
                 return db.Products
-                    .Where(p => p.IsActive)
+                    .Include(p => p.Images)
+                    .Include(p => p.Description).ThenInclude(d => d.DescriptionAdvanced)
+                    .Where(p => p.Status == ProductStatus.Active || p.Status == ProductStatus.Sold)
                     .Select(p => new ProductDto
                     {
                         Id = p.Id,
                         Name = p.Name,
                         Description = p.Description,
+                        Category = p.Category,
+                        Images = p.Images,
                         Price = p.Price,
                         Stock = p.Stock,
                     })
@@ -30,11 +31,12 @@ namespace eUDrive.BusinessLogic.Core.Products
             }
         }
 
-        protected ProductDto ExecuteGetProductByIdAction(int id) 
+        protected ProductDto? ExecuteGetProductByIdAction(int id) 
         {
             using (var db = new ProductContext())
             {
-                var product = db.Products.FirstOrDefault(p => p.Id == id && p.IsActive);
+                var product = db.Products.Include(p => p.Images).Include(p => p.Description).ThenInclude(d => d.DescriptionAdvanced)
+                    .FirstOrDefault(p => p.Id == id && (p.Status == ProductStatus.Active || p.Status == ProductStatus.Sold));
 
                 if (product == null) return null;
 
@@ -43,6 +45,8 @@ namespace eUDrive.BusinessLogic.Core.Products
                     Id = product.Id,
                     Name = product.Name,
                     Description = product.Description,
+                    Category = product.Category,
+                    Images = product.Images,
                     Price = product.Price,
                     Stock = product.Stock,
                 };
@@ -69,9 +73,27 @@ namespace eUDrive.BusinessLogic.Core.Products
                 };
             }
 
+            //Here we make id = 0 because in onther way db will send an error. Ef by himself will put id
+            if (product.Description != null)
+            {
+                product.Description.Id = 0;
+
+                if (product.Description.DescriptionAdvanced != null)
+                    product.Description.DescriptionAdvanced.Id = 0;
+            }
+
+            if (product.Images != null)
+            {
+                foreach (var img in product.Images)
+                {
+                    img.Id = 0;
+                    img.ProductId = 0; 
+                }
+            }
+
             using (var db = new ProductContext())
             {
-                var existingProduct = db.Products.FirstOrDefault(p => p.Name.ToLower() == product.Name.ToLower() && p.IsActive);
+                var existingProduct = db.Products.FirstOrDefault(p => p.Name.ToLower() == product.Name.ToLower() && (p.Status == ProductStatus.Active || p.Status == ProductStatus.Sold));
 
                 if (existingProduct != null)
                 {
@@ -81,20 +103,18 @@ namespace eUDrive.BusinessLogic.Core.Products
                         Message = "Product with this name already exists"
                     };
                 }
-            }
 
-            var productData = new ProductData
-            {
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-                Stock = product.Stock,
-                CreatedAt = DateTime.Now,
-                IsActive = true
-            };
+                var productData = new ProductData
+                {
+                    Name = product.Name,
+                    Description = product.Description,
+                    Category = product.Category,
+                    Images = product.Images ?? new List<ProductImgData>(),
+                    Price = product.Price,
+                    Stock = product.Stock,
+                    Status = ProductStatus.Active
+                };
 
-            using (var db = new ProductContext())
-            {
                 db.Products.Add(productData);
                 db.SaveChanges();
             }
@@ -110,7 +130,8 @@ namespace eUDrive.BusinessLogic.Core.Products
         {
             using (var db = new ProductContext())
             {
-                var existingProduct = db.Products.FirstOrDefault(p => p.Id == product.Id);
+                var existingProduct = db.Products.Include(p => p.Images).Include(p => p.Description).ThenInclude(d => d.DescriptionAdvanced)
+                    .FirstOrDefault(p => p.Id == product.Id);
 
                 if (existingProduct == null)
                 {
@@ -123,8 +144,45 @@ namespace eUDrive.BusinessLogic.Core.Products
 
                 if (!string.IsNullOrWhiteSpace(product.Name)) existingProduct.Name = product.Name;
                 if (product.Price > 0) existingProduct.Price = product.Price;
-                if (!string.IsNullOrWhiteSpace(product.Description)) existingProduct.Description = product.Description;
+                //Here we also make id = 0 to not break something even if it will be send
+                if (product.Description != null)
+                {
+                    if (existingProduct.Description == null)
+                    {
+                        product.Description.Id = 0;
+                        if (product.Description.DescriptionAdvanced != null)
+                            product.Description.DescriptionAdvanced.Id = 0;
+
+                        existingProduct.Description = product.Description;
+                    }
+                    else
+                    {
+                        existingProduct.Description.Description = product.Description.Description;
+
+                        if (product.Description.DescriptionAdvanced != null)
+                        {
+                            if (existingProduct.Description.DescriptionAdvanced == null)
+                            {
+                                product.Description.DescriptionAdvanced.Id = 0;
+                                existingProduct.Description.DescriptionAdvanced = product.Description.DescriptionAdvanced;
+                            }
+                            else
+                            {
+                                existingProduct.Description.DescriptionAdvanced.H = product.Description.DescriptionAdvanced.H;
+                                existingProduct.Description.DescriptionAdvanced.W = product.Description.DescriptionAdvanced.W;
+                                existingProduct.Description.DescriptionAdvanced.L = product.Description.DescriptionAdvanced.L;
+                            }
+                        }
+                    }
+                }
                 if (product.Stock >= 0) existingProduct.Stock = product.Stock;
+                // I need to think what to do with images | Maybe I even will create separate function for it, but right now the most simple way
+                if (product.Images != null)
+                {
+                    db.ProductImgs.RemoveRange(existingProduct.Images);
+                    existingProduct.Images = product.Images;
+                }
+                existingProduct.Category = product.Category;
 
                 db.SaveChanges();
             }
@@ -151,7 +209,7 @@ namespace eUDrive.BusinessLogic.Core.Products
                     };
                 }
 
-                product.IsActive = false;
+                product.Status = ProductStatus.Inactive;
                 db.SaveChanges();
 
                 return new ResponseMsg
