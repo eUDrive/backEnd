@@ -9,26 +9,32 @@ using System.Threading.Tasks;
 
 namespace eUDrive.Domains.Entities.Order
 {
-    public class OrderData
+    public class OrderItemData
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        [ForeignKey("Order")]
+        public int OrderId { get; set; }
+
+        public OrderData Order { get; set; }
 
         [Required]
-        public OrderStatus Status { get; set; }
+        public OrderItemType Type { get; set; }
 
         [Required]
-        public decimal TotalPrice { get; set; }
+        public int ItemId { get; set; }
+
+        [Required]
+        public int Quantity { get; set; }
+
+        [Required]
+        public decimal PriceAtPurchase { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
         public DateTime CreatedAt { get; set; }
-
-        [InverseProperty("Order")]
-        public ICollection<OrderItemData> OrderItems { get; set; } = new List<OrderItemData>();
     }
 }

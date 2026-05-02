@@ -10,11 +10,11 @@ namespace eUDrive.BusinessLogic.Interfaces
 {
     public interface IOrderActions
     {
-        List<OrderDto> GetAllOrdersAction();
-        OrderDto GetOrderByIdAction(int id);
-        List<OrderDto> GetOrdersByUserIdAction(int userId);
-        ResponseMsg CreateOrderAction(OrderDto product);
-        ResponseMsg UpdateOrderAction(OrderDto product);
-        ResponseMsg DeleteOrderAction(int id);
+        ResponseMsg AddToCartAction(int userId, OrderItemDto item, decimal currentPrice);
+        OrderDto GetCartAction(int userId);
+        List<OrderDto> GetOrderHistoryAction(int userId);
+        ResponseMsg CheckoutAction(int userId);
+        ResponseMsg RemoveFromCartAction(int orderItemId);
+        ResponseMsg UpdateCartItemQuantityAction(int orderItemId, int quantity);
     }
 }

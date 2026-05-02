@@ -1,4 +1,4 @@
-﻿using eUDrive.Domains.Entities.Order;
+﻿using eUDrive.Domains.Entities.Certificate;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,15 +8,13 @@ using System.Threading.Tasks;
 
 namespace eUDrive.DataAccess.Context
 {
-    public class OrderContext : DbContext
+    public class CertificateContext : DbContext
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(DbSession.ConnectionStrings);
         }
 
-        public DbSet<OrderData> Orders { get; set; }
-        public DbSet<OrderItemData> OrderItems { get; set; }
-        
+        public DbSet<CertificateData> Certificates { get; set; }
     }
 }
