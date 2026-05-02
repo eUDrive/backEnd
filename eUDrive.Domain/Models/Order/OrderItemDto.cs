@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace eUDrive.Domains.Models.Order
 {
-    public class OrderDto
+    public class OrderItemDto
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public OrderStatus Status { get; set; }
-        public decimal TotalPrice { get; set; }
+        public int OrderId { get; set; }
+        public OrderItemType Type { get; set; }
+        public int ItemId { get; set; }
+        public int Quantity { get; set; }
+        public decimal PriceAtPurchase { get; set; }
         public DateTime CreatedAt { get; set; }
-        public List<OrderItemDto> OrderItems { get; set; } = new List<OrderItemDto>();
     }
 }

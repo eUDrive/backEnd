@@ -1,5 +1,4 @@
-﻿using eUDrive.Domains.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,28 +6,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eUDrive.Domains.Entities.Order
+namespace eUDrive.Domains.Entities.Certificate
 {
-    public class OrderData
+    public class CertificateData
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        [StringLength(100)]
+        public string Name { get; set; }
+
+        public string Description { get; set; }
 
         [Required]
-        public OrderStatus Status { get; set; }
+        public decimal Price { get; set; }
 
-        [Required]
-        public decimal TotalPrice { get; set; }
+        public int Stock {  get; set; }
 
         [Required]
         [DataType(DataType.Date)]
         public DateTime CreatedAt { get; set; }
-
-        [InverseProperty("Order")]
-        public ICollection<OrderItemData> OrderItems { get; set; } = new List<OrderItemData>();
+        
+        public bool IsActive { get; set; }
     }
 }

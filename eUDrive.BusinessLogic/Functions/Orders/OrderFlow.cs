@@ -12,33 +12,34 @@ namespace eUDrive.BusinessLogic.Functions.Orders
 {
     public class OrderFlow : OrderAction, IOrderActions
     {
-        public List<OrderDto> GetAllOrdersAction()
+        public ResponseMsg AddToCartAction(int userId, OrderItemDto item, decimal currentPrice)
         {
-            return ExecuteGetAllOrdersAction();
+            return ExecuteAddToCartAction(userId, item, currentPrice);
         }
 
-        public OrderDto GetOrderByIdAction(int id)
+        public OrderDto GetCartAction(int userId) 
         {
-            return ExecuteGetOrderByIdAction(id);
-        }
-        public List<OrderDto> GetOrdersByUserIdAction(int userId)
-        {
-            return ExecuteGetOrdersByUserIdAction(userId);
+            return ExecuteGetCartAction(userId);
         }
 
-        public ResponseMsg CreateOrderAction(OrderDto order)
+        public List<OrderDto> GetOrderHistoryAction(int userId)
         {
-            return ExecuteCreateOrderAction(order);
+            return ExecuteGetOrderHistoryAction(userId);
         }
 
-        public ResponseMsg UpdateOrderAction(OrderDto order)
+        public ResponseMsg CheckoutAction(int userId)
         {
-            return ExecuteUpdateOrderAction(order);
+            return ExecuteCheckoutAction(userId);
         }
 
-        public ResponseMsg DeleteOrderAction(int id)
+        public ResponseMsg RemoveFromCartAction(int orderItemId)
         {
-            return ExecuteDeleteOrderAction(id);
+            return ExecuteRemoveFromCartAction(orderItemId);
+        }
+
+        public ResponseMsg UpdateCartItemQuantityAction(int orderItemId, int quantity)
+        {
+            return ExecuteUpdateCartItemQuantityAction(orderItemId, quantity);
         }
     }
 }

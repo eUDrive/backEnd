@@ -9,69 +9,68 @@ namespace eUDrive.Api.Controller
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private IOrderActions _orderActions;
+        private IOrderActions _order;
 
         public OrderController()
         {
             var bl = new BusinessLogic.BusinessLogic();
-            _orderActions = bl.GetOrderActions();
+            _order = bl.GetOrderActions();
         }
 
-        [HttpGet("all")]
-        public IActionResult GetAllOrders()
+        [HttpPost("cart/add")]
+        public IActionResult AddToCart([FromBody] CartItemRequest request)
         {
-            var orders = _orderActions.GetAllOrdersAction();
+            var result = _order.AddToCartAction(request.UserId, request.Item, request.CurrentPrice);
+            return Ok(result);
+        }
+
+        [HttpGet("cart/{userId}")]
+        public IActionResult GetCart(int userId)
+        {
+            var cart = _order.GetCartAction(userId);
+            if (cart == null)
+                return NotFound(new { message = "Cart is empty" });
+            return Ok(cart);
+        }
+
+        [HttpPost("checkout/{userId}")]
+        public IActionResult Checkout(int userId)
+        {
+            var result = _order.CheckoutAction(userId);
+            return Ok(result);
+        }
+
+        [HttpGet("history/{userId}")]
+        public IActionResult GetOrderHistory(int userId)
+        {
+            var orders = _order.GetOrderHistoryAction(userId);
             return Ok(orders);
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetOrderById(int id)
+        [HttpDelete("cart/item/{itemId}")]
+        public IActionResult RemoveFromCart(int itemId)
         {
-            var order = _orderActions.GetOrderByIdAction(id);
-            if (order == null) return NotFound(new { message = "Order not found" });
-
-            return Ok(order);
-        }
-
-        [HttpGet("user/{id}")]
-        public IActionResult GetOrdersByUserId(int userId)
-        {
-            var orders = _orderActions.GetOrdersByUserIdAction(userId);
-            return Ok(orders);
-        }
-
-        [HttpPost]
-        [AdminOnly]
-        public IActionResult CreateOrder([FromBody] OrderDto order)
-        {
-            var result = _orderActions.CreateOrderAction(order);
-
-            if (!result.IsSuccess) return BadRequest(result);
-
+            var result = _order.RemoveFromCartAction(itemId);
             return Ok(result);
         }
 
-        [HttpPut("{id}")]
-        [AdminOnly]
-        public IActionResult UpdateOrder(int id, [FromBody] OrderDto order)
+        [HttpPut("cart/item/{itemId}/quantity")]
+        public IActionResult UpdateQuantity(int itemId, [FromBody] QuantityRequest request)
         {
-            order.Id = id;
-            var result = _orderActions.UpdateOrderAction(order);
-
-            if (!result.IsSuccess) return BadRequest(result);
-
+            var result = _order.UpdateCartItemQuantityAction(itemId, request.Quantity);
             return Ok(result);
         }
+    }
 
-        [HttpDelete("{id}")]
-        [AdminOnly]
-        public IActionResult DeleteOrder(int id)
-        {
-            var result = _orderActions.DeleteOrderAction(id);
+    public class CartItemRequest
+    {
+        public int UserId { get; set; }
+        public OrderItemDto Item { get; set; }
+        public decimal CurrentPrice { get; set; }
+    }
 
-            if (!result.IsSuccess) return NotFound(result);
-
-            return Ok(result);
-        }
+    public class QuantityRequest
+    {
+        public int Quantity { get; set; }
     }
 }

@@ -9,11 +9,11 @@ using eUDrive.DataAccess.Context;
 
 #nullable disable
 
-namespace eUDrive.DataAccess.Migrations.Order
+namespace eUDrive.DataAccess.Migrations.Certificate
 {
-    [DbContext(typeof(OrderContext))]
-    [Migration("20260430075520_InitialCreateOrder")]
-    partial class InitialCreateOrder
+    [DbContext(typeof(CertificateContext))]
+    [Migration("20260502145125_InitialCreateCertificate")]
+    partial class InitialCreateCertificate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace eUDrive.DataAccess.Migrations.Order
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("eUDrive.Domains.Entities.Order.OrderData", b =>
+            modelBuilder.Entity("eUDrive.Domains.Entities.Certificate.CertificateData", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -36,6 +36,10 @@ namespace eUDrive.DataAccess.Migrations.Order
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -44,15 +48,15 @@ namespace eUDrive.DataAccess.Migrations.Order
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("Stock")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Certificates");
                 });
 #pragma warning restore 612, 618
         }

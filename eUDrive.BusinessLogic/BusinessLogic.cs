@@ -1,8 +1,9 @@
-﻿using eUDrive.BusinessLogic.Functions.Users;
-using eUDrive.BusinessLogic.Interfaces;
-using eUDrive.BusinessLogic.Functions.Products;
+﻿using eUDrive.BusinessLogic.Functions.Certificate;
 using eUDrive.BusinessLogic.Functions.Orders;
+using eUDrive.BusinessLogic.Functions.Products;
 using eUDrive.BusinessLogic.Functions.Sessions;
+using eUDrive.BusinessLogic.Functions.Users;
+using eUDrive.BusinessLogic.Interfaces;
 
 namespace eUDrive.BusinessLogic
 {
@@ -18,14 +19,19 @@ namespace eUDrive.BusinessLogic
             return new UserFlow();
         }
 
+        public ISessionActions GetSessionActions()
+        {
+            return new SessionFlow();
+        }
+
         public IOrderActions GetOrderActions()
         {
             return new OrderFlow();
         }
 
-        public ISessionActions GetSessionActions()
+        public ICertificateActions GetCertificateActions()
         {
-            return new SessionFlow();
+            return new CertificateFlow();
         }
     }
 }

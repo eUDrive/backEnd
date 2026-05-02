@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace eUDrive.Domains.Enums
 {
-    public enum OrderTypes
+    public enum OrderItemType
     {
-        Car = 0,
+        Product = 0,
         Certificate = 1,
     }
 }
