@@ -6,6 +6,7 @@ namespace eUDrive.DataAccess.Context
     public class UserContext : DbContext
     {
         public DbSet<UserData> Users { get; set; }
+        public object Sessions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
