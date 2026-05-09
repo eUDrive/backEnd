@@ -1,13 +1,13 @@
 ﻿using eUDrive.BusinessLogic.Interfaces;
 using eUDrive.Domains.Models.Product;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using eUDrive.Api.Filters;
 
 namespace eUDrive.Api.Controller
 {
     [Route("api/product")]
     [ApiController]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private IProductActions _productActions;
@@ -19,6 +19,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpGet("all")]
+        [AllowAnonymous]
         public IActionResult GetAllProducts()
         {
             var products = _productActions.GetAllProductsAction();
@@ -26,6 +27,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public IActionResult GetProductById(int id)
         {
             var product = _productActions.GetProductByIdAction(id);
@@ -35,6 +37,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpPost]
+        [Authorize(Roles="Admin")]
         public IActionResult CreateProduct([FromBody] ProductDto product)
         {
             var result = _productActions.CreateProductAction(product);
@@ -45,6 +48,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult UpdateProduct(int id, [FromBody] ProductDto product)
         {
             product.Id = id;
@@ -56,6 +60,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteProduct(int id)
         {
             var result = _productActions.DeleteProductAction(id);

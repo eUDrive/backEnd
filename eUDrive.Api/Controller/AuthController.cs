@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using eUDrive.BusinessLogic.Interfaces;
 using eUDrive.Domains.Models.User;
 using eUDrive.DataAccess.Context;
@@ -90,46 +89,46 @@ namespace eUDrive.Api.Controller
             return Ok(registerUser);
         }
 
-        [HttpGet("check")]
-        public IActionResult CheckSession()
-        {
-            var cookie = Request.Cookies["X-KEY"];
+        //[HttpGet("check")]
+        //public IActionResult CheckSession()
+        //{
+        //    var cookie = Request.Cookies["X-KEY"];
 
-            if (string.IsNullOrWhiteSpace(cookie))
-            {
-                return Unauthorized(new { IsSuccess = false, message = "Not authenticated" });
-            }
+        //    if (string.IsNullOrWhiteSpace(cookie))
+        //    {
+        //        return Unauthorized(new { IsSuccess = false, message = "Not authenticated" });
+        //    }
 
-            using (var db = new UserContext())
-            {
-                var session = db.Sessions.FirstOrDefault(s => s.SessionKey == cookie && s.IsActive);
+        //    using (var db = new UserContext())
+        //    {
+        //        var session = db.Sessions.FirstOrDefault(s => s.SessionKey == cookie && s.IsActive);
 
-                if (session == null || session.ExpiryTime < DateTime.Now)
-                {
-                    return Unauthorized(new { IsSuccess = false, message = "Session expired" });
-                }
+        //        if (session == null || session.ExpiryTime < DateTime.Now)
+        //        {
+        //            return Unauthorized(new { IsSuccess = false, message = "Session expired" });
+        //        }
 
-                var user = db.Users.FirstOrDefault(u => u.Id == session.UserId);
+        //        var user = db.Users.FirstOrDefault(u => u.Id == session.UserId);
 
-                if (user == null)
-                {
-                    return Unauthorized(new { IsSuccess = false, message = "User not found" });
-                }
+        //        if (user == null)
+        //        {
+        //            return Unauthorized(new { IsSuccess = false, message = "User not found" });
+        //        }
 
-                return Ok(new
-                {
-                    IsSuccess = true,
-                    data = new
-                    {
-                        user = new
-                        {
-                            id = user.Id,
-                            username = user.Username,
-                            email = user.Email
-                        }
-                    }
-                });
-            }
-        }
+        //        return Ok(new
+        //        {
+        //            IsSuccess = true,
+        //            data = new
+        //            {
+        //                user = new
+        //                {
+        //                    id = user.Id,
+        //                    username = user.Username,
+        //                    email = user.Email
+        //                }
+        //            }
+        //        });
+        //    }
+        //}
     }
 }

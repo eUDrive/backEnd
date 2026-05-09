@@ -1,5 +1,6 @@
 ﻿using eUDrive.BusinessLogic.Interfaces;
 using eUDrive.Domains.Models.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eUDrive.Api.Controller
@@ -17,6 +18,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpGet("all")]
+        [Authorize(Roles = "Admin")]
         public IActionResult GetAllUsers()
         {
             var users = _userActions.GetAllUsersAction();
@@ -24,6 +26,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult GetUserById(int id)
         {
             var user = _userActions.GetUserByIdAction(id);
@@ -37,6 +40,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateUser([FromBody] UserRegisterDto user)
         {
             var createdUser = _userActions.CreateUserAction(user);
@@ -50,6 +54,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult UpdateUser(int id, [FromBody] UserUpdateDto user)
         {
             user.Id = id;
@@ -64,6 +69,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpPut("activate/{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult ActivateUser(int id, [FromBody] UserActivateDto user)
         {
             user.Id = id;
@@ -78,6 +84,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteUser(int id)
         {
             var user = _userActions.DeleteUserAction(id);

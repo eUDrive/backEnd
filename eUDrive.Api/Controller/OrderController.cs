@@ -1,4 +1,4 @@
-﻿using eUDrive.Api.Filters;
+﻿using Microsoft.AspNetCore.Authorization;
 using eUDrive.BusinessLogic.Interfaces;
 using eUDrive.Domains.Models.Order;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +7,7 @@ namespace eUDrive.Api.Controller
 {
     [Route("api/order")]
     [ApiController]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private IOrderActions _order;

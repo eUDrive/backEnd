@@ -1,4 +1,4 @@
-﻿using eUDrive.Api.Filters;
+﻿using Microsoft.AspNetCore.Authorization;
 using eUDrive.BusinessLogic.Interfaces;
 using eUDrive.Domains.Models.Certificate;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +7,7 @@ namespace eUDrive.Api.Controller
 {
     [Route("api/certificate")]
     [ApiController]
+    [Authorize]
     public class CertificateController : ControllerBase
     {
         private ICertificateActions _certificate;
@@ -18,6 +19,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpGet("getAll")]
+        [AllowAnonymous]
         public IActionResult GetAllCertificates()
         {
             var certificates = _certificate.GetAllCertificatesAction();
@@ -25,6 +27,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpGet("id")]
+        [AllowAnonymous]
         public IActionResult GetCertificateById(int id)
         {
             var certificate = _certificate.GetCertificateByIdAction(id);
@@ -34,7 +37,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpPost]
-        [AdminOnly]
+        [Authorize(Roles="Admin")]
         public IActionResult CreateCertificate([FromBody] CertificateDto certificate)
         {
             var result = _certificate.CreateCertificateAction(certificate);
@@ -42,7 +45,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpPut]
-        [AdminOnly]
+        [Authorize(Roles = "Admin")]
         public IActionResult UpdateCertificate([FromBody] CertificateDto certificate)
         {
             var result = _certificate.UpdateCertificateAction(certificate);
@@ -50,7 +53,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpDelete("id")]
-        [AdminOnly]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteCertificate(int id)
         {
             var result = _certificate.DeleteCertificateAction(id);
