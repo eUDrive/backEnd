@@ -1,5 +1,4 @@
 ﻿using eUDrive.Domains.Entities.Product;
-using eUDrive.Domains.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace eUDrive.DataAccess.Context
@@ -8,7 +7,8 @@ namespace eUDrive.DataAccess.Context
     {
         public DbSet<ProductData> Products { get; set; }
         public DbSet<ProductImgData> ProductImgs { get; set; }
-        public DbSet<ProductDescriptionData> Description { get; set; }
+        public DbSet<CategoryData> Categories {get; set;}
+        public DbSet<ProductDescriptionData> Descriptions { get; set; }
         public DbSet<DescriptionAdvanced> DescriptionAdvanced { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -18,7 +18,7 @@ namespace eUDrive.DataAccess.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DescriptionAdvanced>().ToTable("DescriptionAdvanced");
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProductContext).Assembly);
         }
     }
 }

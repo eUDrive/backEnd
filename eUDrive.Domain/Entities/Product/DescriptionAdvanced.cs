@@ -12,5 +12,9 @@ namespace eUDrive.Domains.Entities.Product
         public int H { get; set; }
         public int W { get; set; }
         public int L { get; set; }
+
+        public int DescriptionId { get; set; }
+        [ForeignKey("DescriptionId")]
+        public ProductDescriptionData Description { get; set; }
     }
 }

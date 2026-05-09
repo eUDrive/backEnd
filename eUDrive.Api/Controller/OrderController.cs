@@ -41,7 +41,6 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpPost]
-        [AdminOnly]
         public IActionResult CreateOrder([FromBody] OrderDto order)
         {
             var result = _orderActions.CreateOrderAction(order);
@@ -52,7 +51,6 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpPut("{id}")]
-        [AdminOnly]
         public IActionResult UpdateOrder(int id, [FromBody] OrderDto order)
         {
             order.Id = id;
@@ -64,7 +62,6 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpDelete("{id}")]
-        [AdminOnly]
         public IActionResult DeleteOrder(int id)
         {
             var result = _orderActions.DeleteOrderAction(id);

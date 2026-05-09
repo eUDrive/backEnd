@@ -3,17 +3,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eUDrive.Domains.Entities.Product
 {
-    public class ProductImgData
+    public class CategoryData
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public string Url { get; set; }
+        [Required]
+        [StringLength(20)]
+        public string Name { get; set; }
 
-        public int ProductId { get; set; }
-
-        [ForeignKey("ProductId")]
-        public ProductData Product { get; set; }
+        public List<ProductData> Products { get; set; } = new();
     }
 }
