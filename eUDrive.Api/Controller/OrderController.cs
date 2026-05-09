@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using eUDrive.BusinessLogic.Interfaces;
-using eUDrive.Domains.Models.Order;
 using Microsoft.AspNetCore.Mvc;
+using eUDrive.Domains.Entities.Order;
 
 namespace eUDrive.Api.Controller
 {
@@ -61,17 +61,5 @@ namespace eUDrive.Api.Controller
             var result = _order.UpdateCartItemQuantityAction(itemId, request.Quantity);
             return Ok(result);
         }
-    }
-
-    public class CartItemRequest
-    {
-        public int UserId { get; set; }
-        public OrderItemDto Item { get; set; }
-        public decimal CurrentPrice { get; set; }
-    }
-
-    public class QuantityRequest
-    {
-        public int Quantity { get; set; }
     }
 }

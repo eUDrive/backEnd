@@ -1,4 +1,5 @@
-﻿using eUDrive.DataAccess.Context;
+﻿using eUDrive.BusinessLogic.Structure;
+using eUDrive.DataAccess.Context;
 using eUDrive.Domains.Entities.User;
 using eUDrive.Domains.Models.Base;
 using eUDrive.Domains.Models.User;
@@ -246,56 +247,75 @@ namespace eUDrive.BusinessLogic.Core.User
             }
         }
 
-        protected ResponseMsg ExecuteLoginAction(UserAuthDto user)
+        protected ResponseAction<LoginResponseDto> ExecuteLoginAction(UserAuthDto user)
         {
             if (string.IsNullOrWhiteSpace(user.Email))
             {
-                return new ResponseMsg
+                return new ResponseAction<LoginResponseDto>
                 {
                     IsSuccess = false,
-                    Message  = "Please, enter the email"
+                    Message  = "Please, enter the email",
+                    Data = null
                 };
             }
 
             if (string.IsNullOrWhiteSpace(user.Password))
             {
-                return new ResponseMsg
+                return new ResponseAction<LoginResponseDto>
                 {
                     IsSuccess = false,
-                    Message = "Please, enter the password"
+                    Message = "Please, enter the password",
+                    Data = null
                 };
             }
+
+            var existingUser = new UserData(); 
 
             using (var db = new UserContext())
             {
                 var email = user.Email.ToLower();
-                var existingUser = db.Users.FirstOrDefault(u => u.Email.ToLower() == email);
+                existingUser = db.Users.FirstOrDefault(u => u.Email.ToLower() == email);
 
                 if (existingUser == null)
                 {
-                    return new ResponseMsg
+                    return new ResponseAction<LoginResponseDto>
                     {
                         IsSuccess = false,
-                        Message = "Incorrect data, please try again!"
+                        Message = "Incorrect data, please try again!",
+                        Data = null
                     };
                 }
 
                 if (!VerifyPassword(user.Password, existingUser.PasswordHash))
                 {
-                    return new ResponseMsg
+                    return new ResponseAction<LoginResponseDto>
                     {
                         IsSuccess = false,
-                        Message = "Incorrect data, please try again!"
+                        Message = "Incorrect data, please try again!",
+                        Data = null
                     };
                 }
             }
 
-            return new ResponseMsg
+            var token = GenerateUserToken(existingUser);
+
+            return new ResponseAction<LoginResponseDto>
             {
                 IsSuccess = true,
-                Message = "Login Successfull"
+                Message = "Login Successfull",
+                Data = new LoginResponseDto
+                {
+                    UserId = existingUser.Id,
+                    Token = token
+                }
             };
         }
-        
+
+        internal string GenerateUserToken(UserData user)
+        {
+            var token = new TokenService();
+            return token.GenerateToken(user.Id, user.Username, user.Role.ToString());
+        }
+
     }
 }

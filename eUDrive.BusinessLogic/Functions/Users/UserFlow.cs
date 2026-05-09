@@ -37,7 +37,7 @@ namespace eUDrive.BusinessLogic.Functions.Users
             return ExecuteDeleteUserAction(id);
         }
 
-        public ResponseMsg LoginAction(UserAuthDto user)
+        public ResponseAction<LoginResponseDto> LoginAction(UserAuthDto user)
         {
             return ExecuteLoginAction(user);
         }

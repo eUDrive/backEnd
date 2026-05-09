@@ -31,28 +31,28 @@ namespace eUDrive.Api.Controller
                 return BadRequest(result);
             }
 
-            using (var db = new UserContext())
-            {
-                var email = auth.Email.ToLower();
-                var user = db.Users.FirstOrDefault(u => u.IsActive && u.Email.ToLower() == email);
+            //using (var db = new UserContext())
+            //{
+            //    var email = auth.Email.ToLower();
+            //    var user = db.Users.FirstOrDefault(u => u.IsActive && u.Email.ToLower() == email);
 
-                if (user == null)
-                {
-                    return BadRequest(new { IsSuccess = false, message = "User not found after login" });
-                }
+            //    if (user == null)
+            //    {
+            //        return BadRequest(new { IsSuccess = false, message = "User not found after login" });
+            //    }
 
-                var sessionKey = _sessionActions.CreateOrUpdateSession(user.Id);
+            //    var sessionKey = _sessionActions.CreateOrUpdateSession(user.Id);
 
-                Response.Cookies.Append("X-KEY", sessionKey, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict,
-                    Expires = DateTimeOffset.Now.AddMinutes(60)
-                });
-            }
+            //    Response.Cookies.Append("X-KEY", sessionKey, new CookieOptions
+            //    {
+            //        HttpOnly = true,
+            //        Secure = true,
+            //        SameSite = SameSiteMode.Strict,
+            //        Expires = DateTimeOffset.Now.AddMinutes(60)
+            //    });
+            //}
 
-            return Ok(result);
+            return Ok(new {token = result.Data.Token});
         }
 
         [HttpPost("logout")]

@@ -12,6 +12,6 @@ namespace eUDrive.BusinessLogic.Interfaces
         ResponseMsg UpdateUserAction(UserUpdateDto user);
         ResponseMsg ActivateUserAction(UserActivateDto user);
         ResponseMsg DeleteUserAction(int id);
-        ResponseMsg LoginAction(UserAuthDto userAuth);
+        ResponseAction<LoginResponseDto> LoginAction(UserAuthDto userAuth);
     }
 }
