@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using eUDrive.Domains.Enums;
 
-
 namespace eUDrive.Domains.Entities.Product
 {
     public class ProductData
@@ -21,8 +20,12 @@ namespace eUDrive.Domains.Entities.Product
         public decimal Price { get; set; }
         public int Stock {  get; set; }
 
-        public ProductCategory Category { get; set; }
+        public int CategoryId { get; set; }
 
+        [ForeignKey("CategoryId")]
+        public CategoryData Category { get; set; }
+
+        [InverseProperty("Product")]
         public List<ProductImgData> Images { get; set; } = new();
 
         public ProductStatus Status { get; set; } = ProductStatus.Active;
