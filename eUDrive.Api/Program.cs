@@ -1,4 +1,4 @@
-using eUDrive.Api.Filters;
+
 using eUDrive.BusinessLogic.Structure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -19,15 +19,11 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins("http://localhost:5173")
             .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials();
+            .AllowAnyHeader();
     });
 });
 
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<SessionAuthFilter>();
-});
+builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 
