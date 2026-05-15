@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using eUDrive.BusinessLogic.Interfaces;
 using eUDrive.Domains.Models.User;
-using eUDrive.DataAccess.Context;
 using Microsoft.AspNetCore.Authorization;
 
 namespace eUDrive.Api.Controller

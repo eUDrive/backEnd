@@ -8,6 +8,8 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseUrls("https://0.0.0.0:7206", "http://0.0.0.0:5151");
+
 eUDrive.DataAccess.DbSession.ConnectionStrings =
     builder.Configuration.GetConnectionString("DefaultConnection");
 
