@@ -22,7 +22,7 @@ namespace eUDrive.BusinessLogic.Core.Products
                         Id = p.Id,
                         Name = p.Name,
                         Description = p.Description,
-                        Category = p.Category,
+                        CategoryId = p.CategoryId,
                         Images = p.Images,
                         Price = p.Price,
                         Stock = p.Stock,
@@ -45,7 +45,7 @@ namespace eUDrive.BusinessLogic.Core.Products
                     Id = product.Id,
                     Name = product.Name,
                     Description = product.Description,
-                    Category = product.Category,
+                    CategoryId = product.CategoryId,
                     Images = product.Images,
                     Price = product.Price,
                     Stock = product.Stock,
@@ -108,7 +108,7 @@ namespace eUDrive.BusinessLogic.Core.Products
                 {
                     Name = product.Name,
                     Description = product.Description,
-                    Category = product.Category,
+                    CategoryId = product.CategoryId,
                     Images = product.Images ?? new List<ProductImgData>(),
                     Price = product.Price,
                     Stock = product.Stock,
@@ -182,7 +182,8 @@ namespace eUDrive.BusinessLogic.Core.Products
                     db.ProductImgs.RemoveRange(existingProduct.Images);
                     existingProduct.Images = product.Images;
                 }
-                existingProduct.Category = product.Category;
+
+                if (product.CategoryId > 0) existingProduct.CategoryId = product.CategoryId;
 
                 db.SaveChanges();
             }
