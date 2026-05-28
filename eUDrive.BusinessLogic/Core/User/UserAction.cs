@@ -305,7 +305,10 @@ namespace eUDrive.BusinessLogic.Core.User
                 Message = "Login Successfull",
                 Data = new LoginResponseDto
                 {
-                    UserId = existingUser.Id,
+                    Id = existingUser.Id,
+                    Username = existingUser.Username,
+                    Email = existingUser.Email,
+                    Role = (int)existingUser.Role,
                     Token = token
                 }
             };

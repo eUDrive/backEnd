@@ -1,4 +1,5 @@
 ﻿using eUDrive.BusinessLogic.Interfaces;
+using eUDrive.Domains.Entities.Product;
 using eUDrive.Domains.Models.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,7 @@ namespace eUDrive.Api.Controller
         }
 
         [HttpPost]
-        [Authorize(Roles="Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateProduct([FromBody] ProductDto product)
         {
             var result = _productActions.CreateProductAction(product);

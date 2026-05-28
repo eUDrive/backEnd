@@ -1,5 +1,4 @@
-﻿
-namespace eUDrive.Domains.Enums
+﻿namespace eUDrive.Domains.Enums
 {
     public enum URole
     {
