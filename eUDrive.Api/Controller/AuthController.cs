@@ -28,7 +28,17 @@ namespace eUDrive.Api.Controller
                 return BadRequest(result);
             }
 
-            return Ok(new {token = result.Data.Token});
+            return Ok(new
+            {
+                token = result.Data.Token,
+                data = new
+                {
+                    id = result.Data.Id,
+                    username = result.Data.Username,
+                    email = result.Data.Email,
+                    role = result.Data.Role
+                }
+            });
         }
 
         [HttpPost("logout")]
