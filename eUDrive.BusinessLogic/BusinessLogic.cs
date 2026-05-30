@@ -2,6 +2,7 @@
 using eUDrive.BusinessLogic.Functions.Orders;
 using eUDrive.BusinessLogic.Functions.Products;
 using eUDrive.BusinessLogic.Functions.Users;
+using eUDrive.BusinessLogic.Functions.Category;
 using eUDrive.BusinessLogic.Interfaces;
 
 namespace eUDrive.BusinessLogic
@@ -26,6 +27,11 @@ namespace eUDrive.BusinessLogic
         public ICertificateActions GetCertificateActions()
         {
             return new CertificateFlow();
+        }
+
+        public ICategoryActions GetCategoryActions() 
+        {
+            return new CategoryFlow();
         }
     }
 }
