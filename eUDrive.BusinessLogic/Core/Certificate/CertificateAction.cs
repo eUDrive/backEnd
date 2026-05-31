@@ -17,14 +17,15 @@ namespace eUDrive.BusinessLogic.Core.Certificates
             using (var db = new CertificateContext())
             {
                 return db.Certificates
-                    .Where(c => c.IsActive)
                     .Select(c => new CertificateDto
                     {
                         Id = c.Id,
                         Name = c.Name,
                         Description = c.Description,
                         Price = c.Price,
-                        Stock = c.Stock
+                        Stock = c.Stock,
+                        CreatedAt = c.CreatedAt,
+                        IsActive = c.IsActive
                     })
                     .ToList();
             }
@@ -36,7 +37,7 @@ namespace eUDrive.BusinessLogic.Core.Certificates
 
             using (var db = new CertificateContext())
             {
-                var cert = db.Certificates.FirstOrDefault(c => c.Id == id && c.IsActive);
+                var cert = db.Certificates.FirstOrDefault(c => c.Id == id);
                 if (cert == null)
                     return null;
 
@@ -46,7 +47,9 @@ namespace eUDrive.BusinessLogic.Core.Certificates
                     Name = cert.Name,
                     Description = cert.Description,
                     Price = cert.Price,
-                    Stock = cert.Stock
+                    Stock = cert.Stock,
+                    CreatedAt = cert.CreatedAt,
+                    IsActive = cert.IsActive
                 };
             }
         }
@@ -142,6 +145,7 @@ namespace eUDrive.BusinessLogic.Core.Certificates
                 cert.Description = certificate.Description;
                 cert.Price = certificate.Price;
                 cert.Stock = certificate.Stock;
+                cert.IsActive = certificate.IsActive;
 
                 db.SaveChanges();
 

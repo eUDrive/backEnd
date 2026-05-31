@@ -34,12 +34,13 @@ namespace eUDrive.BusinessLogic.Core.User
             using (var db = new UserContext())
             {
                     return db.Users
-                    .Where(u => u.IsActive)
                     .Select(u => new UserDto
                     {
                         Id = u.Id,
                         Username = u.Username,
                         Email = u.Email,
+                        IsActive = u.IsActive,
+                        CreatedAt = u.CreatedAt
                     })
                     .ToList();
             }
@@ -49,7 +50,7 @@ namespace eUDrive.BusinessLogic.Core.User
         {
             using (var db = new UserContext())
             {
-                var user = db.Users.FirstOrDefault(u => u.Id == id && u.IsActive);
+                var user = db.Users.FirstOrDefault(u => u.Id == id);
 
                 if (user == null)
                 {
@@ -61,6 +62,8 @@ namespace eUDrive.BusinessLogic.Core.User
                     Id = user.Id,
                     Username = user.Username,
                     Email = user.Email,
+                    IsActive = user.IsActive,
+                    CreatedAt = user.CreatedAt
                 };
             }
         }
