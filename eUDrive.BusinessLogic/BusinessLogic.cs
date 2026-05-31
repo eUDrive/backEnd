@@ -4,6 +4,7 @@ using eUDrive.BusinessLogic.Functions.Products;
 using eUDrive.BusinessLogic.Functions.Users;
 using eUDrive.BusinessLogic.Functions.Category;
 using eUDrive.BusinessLogic.Interfaces;
+using eUDrive.BusinessLogic.Functions.Images;
 
 namespace eUDrive.BusinessLogic
 {
@@ -32,6 +33,11 @@ namespace eUDrive.BusinessLogic
         public ICategoryActions GetCategoryActions() 
         {
             return new CategoryFlow();
+        }
+
+        public IImageActions GetImageActions()
+        {
+            return new ImageFlow();
         }
     }
 }

@@ -12,5 +12,6 @@ namespace eUDrive.Domains.Models.Product
         public List<ProductImgData> Images { get; set; } = new();
         public decimal Price { get; set; }
         public int Stock { get; set; }
+        public ProductStatus Status { get; set; }
     }
 }

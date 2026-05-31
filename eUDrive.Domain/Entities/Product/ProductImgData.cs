@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace eUDrive.Domains.Entities.Product
 {
@@ -14,6 +15,7 @@ namespace eUDrive.Domains.Entities.Product
         public int ProductId { get; set; }
 
         [ForeignKey("ProductId")]
+        [JsonIgnore]
         public ProductData Product { get; set; }
     }
 }

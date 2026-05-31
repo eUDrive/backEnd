@@ -39,7 +39,7 @@ namespace eUDrive.Api.Controller
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public IActionResult CreateProduct([FromBody] ProductDto product)
+        public IActionResult CreateProduct([FromBody] ProductCreateDto product)
         {
             var result = _productActions.CreateProductAction(product);
 

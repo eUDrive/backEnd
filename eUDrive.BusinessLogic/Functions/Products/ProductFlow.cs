@@ -17,12 +17,12 @@ namespace eUDrive.BusinessLogic.Functions.Products
             return ExecuteGetAllProductsAction();
         }
 
-        public ProductDto GetProductByIdAction(int id)
+        public ProductDto? GetProductByIdAction(int id)
         {
             return ExecuteGetProductByIdAction(id);
         }
 
-        public ResponseMsg CreateProductAction(ProductDto product)
+        public ResponseAction<ProductDto> CreateProductAction(ProductCreateDto product)
         {
             return ExecuteCreateProductAction(product);
         }

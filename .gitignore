@@ -12,6 +12,7 @@
 eUDrive.Api/appsettings.json ##To prevent bd changes
 *.sql
 adminData.txt
+eUDrive.Api/Images 
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

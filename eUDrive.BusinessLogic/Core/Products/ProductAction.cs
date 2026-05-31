@@ -16,7 +16,6 @@ namespace eUDrive.BusinessLogic.Core.Products
                 return db.Products
                     .Include(p => p.Images)
                     .Include(p => p.Description).ThenInclude(d => d.DescriptionAdvanced)
-                    .Where(p => p.Status == ProductStatus.Active || p.Status == ProductStatus.Sold)
                     .Select(p => new ProductDto
                     {
                         Id = p.Id,
@@ -26,6 +25,7 @@ namespace eUDrive.BusinessLogic.Core.Products
                         Images = p.Images,
                         Price = p.Price,
                         Stock = p.Stock,
+                        Status = p.Status
                     })
                     .ToList();
             }
@@ -36,7 +36,7 @@ namespace eUDrive.BusinessLogic.Core.Products
             using (var db = new ProductContext())
             {
                 var product = db.Products.Include(p => p.Images).Include(p => p.Description).ThenInclude(d => d.DescriptionAdvanced)
-                    .FirstOrDefault(p => p.Id == id && (p.Status == ProductStatus.Active || p.Status == ProductStatus.Sold));
+                    .FirstOrDefault(p => p.Id == id);
 
                 if (product == null) return null;
 
@@ -49,29 +49,41 @@ namespace eUDrive.BusinessLogic.Core.Products
                     Images = product.Images,
                     Price = product.Price,
                     Stock = product.Stock,
+                    Status = product.Status
                 };
             }
         }
 
-        protected ResponseMsg ExecuteCreateProductAction(ProductDto product)
+        protected ResponseAction<ProductDto> ExecuteCreateProductAction(ProductCreateDto dto)
         {
-            if (string.IsNullOrWhiteSpace(product.Name))
+            if (string.IsNullOrWhiteSpace(dto.Name))
             {
-                return new ResponseMsg
+                return new ResponseAction<ProductDto>
                 {
                     IsSuccess = false,
                     Message = "Product name can't be empty"
                 };
             }
 
-            if (product.Price <= 0)
+            if (dto.Price <= 0)
             {
-                return new ResponseMsg
+                return new ResponseAction<ProductDto>
                 {
                     IsSuccess = false,
                     Message = "Product price must be greater than 0"
                 };
             }
+
+            var product = new ProductDto
+            {
+                Name = dto.Name,
+                Price = dto.Price,
+                Stock = dto.Stock,
+                CategoryId = dto.CategoryId,
+                Description = dto.Description != null
+                    ? new ProductDescriptionData { Description = dto.Description }
+                    : null,
+            };
 
             //Here we make id = 0 because in onther way db will send an error. Ef by himself will put id
             if (product.Description != null)
@@ -97,7 +109,7 @@ namespace eUDrive.BusinessLogic.Core.Products
 
                 if (existingProduct != null)
                 {
-                    return new ResponseMsg
+                    return new ResponseAction<ProductDto>
                     {
                         IsSuccess = false,
                         Message = "Product with this name already exists"
@@ -117,13 +129,16 @@ namespace eUDrive.BusinessLogic.Core.Products
 
                 db.Products.Add(productData);
                 db.SaveChanges();
-            }
 
-            return new ResponseMsg
-            {
-                IsSuccess = true,
-                Message = "Product created successfully"
-            };
+                product.Id = productData.Id;
+
+                return new ResponseAction<ProductDto>
+                {
+                    IsSuccess = true,
+                    Message = "Product created successfully",
+                    Data = product
+                };
+            }
         }
 
         protected ResponseMsg ExecuteUpdateProductAction(ProductDto product)

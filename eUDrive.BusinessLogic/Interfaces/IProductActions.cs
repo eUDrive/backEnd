@@ -11,8 +11,8 @@ namespace eUDrive.BusinessLogic.Interfaces
     public interface IProductActions
     {
         List<ProductDto> GetAllProductsAction();
-        ProductDto GetProductByIdAction(int id);
-        ResponseMsg CreateProductAction(ProductDto product);
+        ProductDto? GetProductByIdAction(int id);
+        ResponseAction<ProductDto> CreateProductAction(ProductCreateDto product);
         ResponseMsg UpdateProductAction(ProductDto product);
         ResponseMsg DeleteProductAction(int id);
     }
