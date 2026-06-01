@@ -16,5 +16,10 @@ namespace eUDrive.BusinessLogic.Functions.Images
         {
             return ExecuteAddProductImageAction(image);
         }
+
+        public ResponseMsg DeleteProductImageAction(int productId, int id)
+        {
+            return ExecuteDeleteProductImageAction(productId, id);
+        }
     }
 }

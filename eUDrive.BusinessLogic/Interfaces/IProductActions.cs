@@ -13,7 +13,7 @@ namespace eUDrive.BusinessLogic.Interfaces
         List<ProductDto> GetAllProductsAction();
         ProductDto? GetProductByIdAction(int id);
         ResponseAction<ProductDto> CreateProductAction(ProductCreateDto product);
-        ResponseMsg UpdateProductAction(ProductDto product);
+        ResponseMsg UpdateProductAction(int id, UpdateProductDto product);
         ResponseMsg DeleteProductAction(int id);
     }
 }

@@ -8,5 +8,6 @@ namespace eUDrive.BusinessLogic.Interfaces
         List<ImageDto> GetProductImagesAction(int id);
 
         ResponseMsg AddProductImageAction(UploadImageDto image);
+        ResponseMsg DeleteProductImageAction(int productId, int id);
     }
 }

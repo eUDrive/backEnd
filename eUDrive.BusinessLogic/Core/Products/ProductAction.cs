@@ -80,28 +80,21 @@ namespace eUDrive.BusinessLogic.Core.Products
                 Price = dto.Price,
                 Stock = dto.Stock,
                 CategoryId = dto.CategoryId,
-                Description = dto.Description != null
-                    ? new ProductDescriptionData { Description = dto.Description }
-                    : null,
-            };
-
-            //Here we make id = 0 because in onther way db will send an error. Ef by himself will put id
-            if (product.Description != null)
-            {
-                product.Description.Id = 0;
-
-                if (product.Description.DescriptionAdvanced != null)
-                    product.Description.DescriptionAdvanced.Id = 0;
-            }
-
-            if (product.Images != null)
-            {
-                foreach (var img in product.Images)
+                Description = dto.Description == null ? null : new ProductDescriptionData
                 {
-                    img.Id = 0;
-                    img.ProductId = 0; 
+                    Description = dto.Description,
+                    DescriptionAdvanced = dto.H.HasValue &&
+                                          dto.W.HasValue &&
+                                          dto.L.HasValue
+                        ? new DescriptionAdvanced
+                        {
+                            H = dto.H.Value,
+                            W = dto.W.Value,
+                            L = dto.L.Value
+                        }
+                        : null
                 }
-            }
+            };
 
             using (var db = new ProductContext())
             {
@@ -119,12 +112,24 @@ namespace eUDrive.BusinessLogic.Core.Products
                 var productData = new ProductData
                 {
                     Name = product.Name,
-                    Description = product.Description,
                     CategoryId = product.CategoryId,
-                    Images = product.Images ?? new List<ProductImgData>(),
                     Price = product.Price,
                     Stock = product.Stock,
-                    Status = ProductStatus.Active
+                    Status = ProductStatus.Active,
+                    Description = dto.Description == null ? null : new ProductDescriptionData
+                    {
+                        Description = dto.Description,
+                        DescriptionAdvanced = dto.H.HasValue &&
+                                          dto.W.HasValue &&
+                                          dto.L.HasValue
+                        ? new DescriptionAdvanced
+                        {
+                            H = dto.H.Value,
+                            W = dto.W.Value,
+                            L = dto.L.Value
+                        }
+                        : null
+                    }
                 };
 
                 db.Products.Add(productData);
@@ -141,12 +146,12 @@ namespace eUDrive.BusinessLogic.Core.Products
             }
         }
 
-        protected ResponseMsg ExecuteUpdateProductAction(ProductDto product)
+        protected ResponseMsg ExecuteUpdateProductAction(int id, UpdateProductDto product)
         {
             using (var db = new ProductContext())
             {
-                var existingProduct = db.Products.Include(p => p.Images).Include(p => p.Description).ThenInclude(d => d.DescriptionAdvanced)
-                    .FirstOrDefault(p => p.Id == product.Id);
+                var existingProduct = db.Products.Include(p => p.Description).ThenInclude(d => d.DescriptionAdvanced)
+                    .FirstOrDefault(p => p.Id == id);
 
                 if (existingProduct == null)
                 {
@@ -158,47 +163,28 @@ namespace eUDrive.BusinessLogic.Core.Products
                 }
 
                 if (!string.IsNullOrWhiteSpace(product.Name)) existingProduct.Name = product.Name;
-                if (product.Price > 0) existingProduct.Price = product.Price;
-                //Here we also make id = 0 to not break something even if it will be send
+                if (product.Price.HasValue && product.Price.Value > 0) existingProduct.Price = product.Price.Value;
+                if (product.Stock.HasValue && product.Stock.Value >= 0) existingProduct.Stock = product.Stock.Value;
+                if (product.CategoryId.HasValue && product.CategoryId.Value > 0) existingProduct.CategoryId = product.CategoryId.Value;
+                if (product.Status.HasValue) existingProduct.Status = product.Status.Value;
                 if (product.Description != null)
                 {
-                    if (existingProduct.Description == null)
-                    {
-                        product.Description.Id = 0;
-                        if (product.Description.DescriptionAdvanced != null)
-                            product.Description.DescriptionAdvanced.Id = 0;
+                    existingProduct.Description ??= new ProductDescriptionData();
 
-                        existingProduct.Description = product.Description;
-                    }
-                    else
-                    {
-                        existingProduct.Description.Description = product.Description.Description;
+                    existingProduct.Description.Description = product.Description;
 
-                        if (product.Description.DescriptionAdvanced != null)
+                    if(product.H.HasValue && product.W.HasValue && product.L.HasValue) 
+                    {
+                        if(existingProduct.Description.DescriptionAdvanced == null) 
                         {
-                            if (existingProduct.Description.DescriptionAdvanced == null)
-                            {
-                                product.Description.DescriptionAdvanced.Id = 0;
-                                existingProduct.Description.DescriptionAdvanced = product.Description.DescriptionAdvanced;
-                            }
-                            else
-                            {
-                                existingProduct.Description.DescriptionAdvanced.H = product.Description.DescriptionAdvanced.H;
-                                existingProduct.Description.DescriptionAdvanced.W = product.Description.DescriptionAdvanced.W;
-                                existingProduct.Description.DescriptionAdvanced.L = product.Description.DescriptionAdvanced.L;
-                            }
+                            existingProduct.Description.DescriptionAdvanced = new DescriptionAdvanced();
                         }
+
+                        existingProduct.Description.DescriptionAdvanced.H = product.H.Value;
+                        existingProduct.Description.DescriptionAdvanced.W = product.W.Value;
+                        existingProduct.Description.DescriptionAdvanced.L = product.L.Value;
                     }
                 }
-                if (product.Stock >= 0) existingProduct.Stock = product.Stock;
-                // I need to think what to do with images | Maybe I even will create separate function for it, but right now the most simple way
-                if (product.Images != null)
-                {
-                    db.ProductImgs.RemoveRange(existingProduct.Images);
-                    existingProduct.Images = product.Images;
-                }
-
-                if (product.CategoryId > 0) existingProduct.CategoryId = product.CategoryId;
 
                 db.SaveChanges();
             }

@@ -50,10 +50,9 @@ namespace eUDrive.Api.Controller
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult UpdateProduct(int id, [FromBody] ProductDto product)
+        public IActionResult UpdateProduct(int id, [FromBody] UpdateProductDto product)
         {
-            product.Id = id;
-            var result = _productActions.UpdateProductAction(product);
+            var result = _productActions.UpdateProductAction(id, product);
 
             if (!result.IsSuccess) return BadRequest(result);
 

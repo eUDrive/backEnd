@@ -27,9 +27,9 @@ namespace eUDrive.BusinessLogic.Functions.Products
             return ExecuteCreateProductAction(product);
         }
 
-        public ResponseMsg UpdateProductAction(ProductDto product)
+        public ResponseMsg UpdateProductAction(int id, UpdateProductDto product)
         {
-            return ExecuteUpdateProductAction(product);
+            return ExecuteUpdateProductAction(id, product);
         }
 
         public ResponseMsg DeleteProductAction(int id)

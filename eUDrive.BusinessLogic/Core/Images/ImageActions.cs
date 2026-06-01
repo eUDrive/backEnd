@@ -7,18 +7,6 @@ namespace eUDrive.BusinessLogic.Core.Images
 {
     public class ImageActions
     {
-        private string? GetPath(string fileName) 
-        {
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "Images", fileName);
-
-            if (!File.Exists(path))
-            {
-                return null;
-            }
-
-            return path;
-        }
-
         protected List<ImageDto> ExecuteGetProductImagesAction(int id)
         {
             using(var db = new ProductContext())
@@ -80,6 +68,46 @@ namespace eUDrive.BusinessLogic.Core.Images
                 Message = "Image uploaded successfully"
             };
 
+        }
+
+        protected ResponseMsg ExecuteDeleteProductImageAction(int productId, int id)
+        {
+            using (var db = new ProductContext()) 
+            {
+                var existingImage = db.ProductImgs.FirstOrDefault(i => i.Id == id && i.ProductId == productId);
+
+                if(existingImage == null) 
+                {
+                    return new ResponseMsg
+                    {
+                        IsSuccess = false,
+                        Message = "Image not found for this product"
+                    };
+                }
+
+                var url = existingImage.Url ?? string.Empty;
+                var fileName = Path.GetFileName(url);
+
+                string? fullPath = null;
+                if (!string.IsNullOrWhiteSpace(fileName))
+                {
+                    fullPath = Path.Combine(Directory.GetCurrentDirectory(), "Images", fileName);
+                }
+
+                db.ProductImgs.Remove(existingImage);
+                db.SaveChanges();
+
+                if (!string.IsNullOrWhiteSpace(fullPath) && File.Exists(fullPath))
+                {
+                    File.Delete(fullPath);
+                }
+            }
+
+            return new ResponseMsg
+            {
+                IsSuccess = true,
+                Message = "Image was deleted successfully"
+            };
         }
     }
 }
