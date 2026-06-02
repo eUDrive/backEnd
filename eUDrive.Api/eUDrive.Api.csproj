@@ -26,6 +26,10 @@
     <ProjectReference Include="..\eUDrive.BusinessLogic\eUDrive.BusinessLogic.csproj" />
     <ProjectReference Include="..\eUDrive.Domain\eUDrive.Domains.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Images\" />
+  </ItemGroup>
 	
 
 
